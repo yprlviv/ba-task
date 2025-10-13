@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advertiser Management - Facebook Ads Integration</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .validation-form {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .validation-results {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .validation-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #f1f3f4;
+        }
+        
+        .validation-item:last-child {
+            border-bottom: none;
+        }
+        
+        .validation-item.success {
+            color: #28a745;
+        }
+        
+        .validation-item.error {
+            color: #dc3545;
+        }
+        
+        .advertiser-card {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.2s;
+        }
+        
+        .advertiser-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        
+        .advertiser-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+        
+        .advertiser-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 0.25rem;
+        }
+        
+        .advertiser-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .advertiser-status.active {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .advertiser-status.pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .advertiser-details {
+            color: #6c757d;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        .advertiser-stats {
+            display: flex;
+            gap: 2rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #f1f3f4;
+        }
+        
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+        
+        .help-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .help-section h3 {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .help-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .help-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255,255,255,0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            color: white;
+            transition: background-color 0.2s;
+        }
+        
+        .help-link:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .register-form {
+            display: none;
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .register-form.show {
+            display: block;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-left">
+                <a href="index.html" class="back-btn" style="color: white; text-decoration: none;">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+                <h1>Advertiser Management</h1>
+            </div>
+            <div class="header-right">
+                <button class="action-btn primary" onclick="showAddForm()">
+                    <i class="fas fa-plus"></i> Add Account
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Ad Account Validation -->
+            <section>
+                <h2><i class="fas fa-search"></i> Validate Facebook Ad Account</h2>
+                
+                <div class="validation-form">
+                    <div class="form-group">
+                        <label for="adAccountId">Facebook Ad Account ID</label>
+                        <input type="text" id="adAccountId" placeholder="act_123456789" value="act_123456789">
+                        <small class="help-text">Enter your Facebook ad account ID (format: act_xxxxxxxxx)</small>
+                    </div>
+                    
+                    <button class="btn-primary" onclick="validateAccount()">
+                        <i class="fas fa-check"></i> Validate
+                    </button>
+                    
+                    <div class="validation-results" id="validationResults" style="display: none;">
+                        <h4><i class="fas fa-chart-bar"></i> Validation Results</h4>
+                        <div id="validationContent">
+                            <!-- Results will be populated here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Register Form -->
+                <div class="register-form" id="registerForm">
+                    <h4><i class="fas fa-user-plus"></i> Register Advertiser</h4>
+                    
+                    <div class="form-group">
+                        <label for="advertiserName">Advertiser Name</label>
+                        <input type="text" id="advertiserName" placeholder="My Business">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="businessCategory">Business Category</label>
+                        <select id="businessCategory">
+                            <option value="">Select category...</option>
+                            <option value="ECOMMERCE">E-commerce</option>
+                            <option value="TECHNOLOGY">Technology</option>
+                            <option value="HEALTHCARE">Healthcare</option>
+                            <option value="FINANCE">Finance</option>
+                            <option value="EDUCATION">Education</option>
+                            <option value="ENTERTAINMENT">Entertainment</option>
+                            <option value="TRAVEL">Travel</option>
+                            <option value="AUTOMOTIVE">Automotive</option>
+                            <option value="REAL_ESTATE">Real Estate</option>
+                            <option value="OTHER">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button class="btn-secondary" onclick="hideRegisterForm()">Cancel</button>
+                        <button class="btn-primary" onclick="registerAdvertiser()">
+                            <i class="fas fa-save"></i> Register
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Registered Advertisers -->
+            <section>
+                <h2><i class="fas fa-building"></i> Registered Advertisers</h2>
+                
+                <div class="advertiser-card">
+                    <div class="advertiser-header">
+                        <div>
+                            <div class="advertiser-name">My Business</div>
+                            <div class="advertiser-status active">
+                                <i class="fas fa-check-circle"></i> Active
+                            </div>
+                        </div>
+                        <button class="action-menu-btn" onclick="toggleAdvertiserMenu(1)">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="advertiser-details">
+                        Account: act_123456789 | Currency: USD | Timezone: EST<br>
+                        Category: E-commerce | Verified: Yes
+                    </div>
+                    
+                    <div class="advertiser-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">12</div>
+                            <div class="stat-label">Campaigns</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">$2,450.00</div>
+                            <div class="stat-label">Total Spend</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">145,230</div>
+                            <div class="stat-label">Impressions</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">2.4%</div>
+                            <div class="stat-label">CTR</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="advertiser-card">
+                    <div class="advertiser-header">
+                        <div>
+                            <div class="advertiser-name">Secondary Business</div>
+                            <div class="advertiser-status pending">
+                                <i class="fas fa-clock"></i> Pending
+                            </div>
+                        </div>
+                        <button class="action-menu-btn" onclick="toggleAdvertiserMenu(2)">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="advertiser-details">
+                        Account: act_987654321 | Currency: USD | Timezone: PST<br>
+                        Status: Awaiting Business Verification
+                    </div>
+                    
+                    <div class="advertiser-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">0</div>
+                            <div class="stat-label">Campaigns</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">$0.00</div>
+                            <div class="stat-label">Total Spend</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">-</div>
+                            <div class="stat-label">Impressions</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">-</div>
+                            <div class="stat-label">CTR</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Help Section -->
+            <div class="help-section">
+                <h3><i class="fas fa-question-circle"></i> Need Help Setting Up?</h3>
+                <p>Setting up Facebook ad accounts requires manual configuration through Facebook Business Manager. Here are some helpful resources:</p>
+                
+                <div class="help-links">
+                    <a href="#" class="help-link">
+                        <i class="fas fa-book"></i>
+                        <div>
+                            <strong>Setup Guide</strong><br>
+                            <small>How to create Facebook Ad Accounts</small>
+                        </div>
+                    </a>
+                    <a href="#" class="help-link">
+                        <i class="fas fa-video"></i>
+                        <div>
+                            <strong>Video Tutorial</strong><br>
+                            <small>Business Manager Setup</small>
+                        </div>
+                    </a>
+                    <a href="#" class="help-link">
+                        <i class="fas fa-comments"></i>
+                        <div>
+                            <strong>Contact Support</strong><br>
+                            <small>Get help with verification</small>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        function validateAccount() {
+            const accountId = document.getElementById('adAccountId').value;
+            const resultsDiv = document.getElementById('validationResults');
+            const contentDiv = document.getElementById('validationContent');
+            
+            if (!accountId) {
+                showNotification('Please enter an ad account ID', 'error');
+                return;
+            }
+            
+            // Show loading state
+            contentDiv.innerHTML = '<div style="text-align: center; padding: 1rem;"><i class="fas fa-spinner fa-spin"></i> Validating...</div>';
+            resultsDiv.style.display = 'block';
+            
+            // Simulate API call
+            setTimeout(() => {
+                // Mock successful validation
+                contentDiv.innerHTML = `
+                    <div class="validation-item success">
+                        <i class="fas fa-check-circle"></i>
+                        <span><strong>Account Found:</strong> My Business Account</span>
+                    </div>
+                    <div class="validation-item success">
+                        <i class="fas fa-check-circle"></i>
+                        <span><strong>Status:</strong> Active</span>
+                    </div>
+                    <div class="validation-item success">
+                        <i class="fas fa-check-circle"></i>
+                        <span><strong>Currency:</strong> USD</span>
+                    </div>
+                    <div class="validation-item success">
+                        <i class="fas fa-check-circle"></i>
+                        <span><strong>Timezone:</strong> America/New_York (EST)</span>
+                    </div>
+                    <div class="validation-item success">
+                        <i class="fas fa-check-circle"></i>
+                        <span><strong>Permissions:</strong> ads_management, ads_read</span>
+                    </div>
+                    <div class="validation-item success">
+                        <i class="fas fa-check-circle"></i>
+                        <span><strong>Available Budget:</strong> $5,000.00</span>
+                    </div>
+                    <div class="validation-item success">
+                        <i class="fas fa-check-circle"></i>
+                        <span><strong>Business Verification:</strong> Verified</span>
+                    </div>
+                `;
+                
+                // Show register form
+                document.getElementById('registerForm').classList.add('show');
+                document.getElementById('advertiserName').value = 'My Business';
+                
+                showNotification('Ad account validated successfully!', 'success');
+            }, 2000);
+        }
+        
+        function showAddForm() {
+            document.getElementById('registerForm').classList.add('show');
+        }
+        
+        function hideRegisterForm() {
+            document.getElementById('registerForm').classList.remove('show');
+        }
+        
+        function registerAdvertiser() {
+            const name = document.getElementById('advertiserName').value;
+            const category = document.getElementById('businessCategory').value;
+            
+            if (!name || !category) {
+                showNotification('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            showNotification('Advertiser registered successfully!', 'success');
+            hideRegisterForm();
+            
+            // Reset validation results
+            document.getElementById('validationResults').style.display = 'none';
+            document.getElementById('adAccountId').value = '';
+        }
+        
+        function toggleAdvertiserMenu(advertiserId) {
+            showNotification(`Advertiser menu for ID ${advertiserId} - Feature coming soon!`, 'info');
+        }
+    </script>
+</body>
+</html>

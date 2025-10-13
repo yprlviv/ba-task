@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facebook Ads Integration Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-left">
+                <i class="fas fa-home"></i>
+                <h1>Facebook Ads Integration Dashboard</h1>
+            </div>
+            <div class="header-right">
+                <div class="sync-status">
+                    <i class="fas fa-sync-alt"></i>
+                    <span>Last Sync: 2m ago</span>
+                </div>
+                <div class="user-profile">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Profile</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Campaign Overview Cards -->
+            <section class="overview-section">
+                <h2><i class="fas fa-chart-bar"></i> Campaign Overview</h2>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-value">12</div>
+                        <div class="metric-label">Active Campaigns</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">$2,450.00</div>
+                        <div class="metric-label">Total Spend</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">145,230</div>
+                        <div class="metric-label">Impressions</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">2.4%</div>
+                        <div class="metric-label">Click Rate</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Performance Chart -->
+            <section class="chart-section">
+                <h2><i class="fas fa-chart-line"></i> Performance Trends (Last 30 Days)</h2>
+                <div class="chart-container">
+                    <canvas id="performanceChart"></canvas>
+                </div>
+            </section>
+
+            <!-- Quick Actions -->
+            <section class="actions-section">
+                <h2><i class="fas fa-bolt"></i> Quick Actions</h2>
+                <div class="action-buttons">
+                    <button class="action-btn primary" onclick="openCampaignWizard()">
+                        <i class="fas fa-plus"></i>
+                        New Campaign
+                    </button>
+                    <button class="action-btn secondary" onclick="openReports()">
+                        <i class="fas fa-chart-bar"></i>
+                        View Reports
+                    </button>
+                    <button class="action-btn secondary" onclick="openAccountManager()">
+                        <i class="fas fa-cog"></i>
+                        Manage Accounts
+                    </button>
+                </div>
+            </section>
+
+            <!-- Recent Campaigns -->
+            <section class="campaigns-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-list"></i> Recent Campaigns</h2>
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search campaigns..." id="campaignSearch">
+                    </div>
+                </div>
+                
+                <div class="campaigns-table">
+                    <div class="table-header">
+                        <div class="col-name">Campaign Name</div>
+                        <div class="col-status">Status</div>
+                        <div class="col-budget">Budget</div>
+                        <div class="col-spend">Spend</div>
+                        <div class="col-actions">Actions</div>
+                    </div>
+                    
+                    <div class="campaign-row" data-campaign-id="1">
+                        <div class="col-name">
+                            <div class="campaign-name">Summer Sale 2024</div>
+                        </div>
+                        <div class="col-status">
+                            <span class="status-badge active">
+                                <i class="fas fa-circle"></i> Active
+                            </span>
+                        </div>
+                        <div class="col-budget">$100/day</div>
+                        <div class="col-spend">$89.50</div>
+                        <div class="col-actions">
+                            <button class="action-menu-btn" onclick="toggleActionMenu(1)">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                            <div class="action-menu" id="actionMenu1">
+                                <button onclick="editCampaign(1)">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                                <button onclick="viewCampaign(1)">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                                <button onclick="pauseCampaign(1)">
+                                    <i class="fas fa-pause"></i> Pause
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="campaign-row" data-campaign-id="2">
+                        <div class="col-name">
+                            <div class="campaign-name">Brand Awareness Q4</div>
+                        </div>
+                        <div class="col-status">
+                            <span class="status-badge paused">
+                                <i class="fas fa-pause"></i> Paused
+                            </span>
+                        </div>
+                        <div class="col-budget">$50/day</div>
+                        <div class="col-spend">$0.00</div>
+                        <div class="col-actions">
+                            <button class="action-menu-btn" onclick="toggleActionMenu(2)">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                            <div class="action-menu" id="actionMenu2">
+                                <button onclick="editCampaign(2)">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                                <button onclick="viewCampaign(2)">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                                <button onclick="activateCampaign(2)">
+                                    <i class="fas fa-play"></i> Activate
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="campaign-row" data-campaign-id="3">
+                        <div class="col-name">
+                            <div class="campaign-name">Holiday Promotion</div>
+                        </div>
+                        <div class="col-status">
+                            <span class="status-badge active">
+                                <i class="fas fa-circle"></i> Active
+                            </span>
+                        </div>
+                        <div class="col-budget">$200/day</div>
+                        <div class="col-spend">$187.25</div>
+                        <div class="col-actions">
+                            <button class="action-menu-btn" onclick="toggleActionMenu(3)">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                            <div class="action-menu" id="actionMenu3">
+                                <button onclick="editCampaign(3)">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                                <button onclick="viewCampaign(3)">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                                <button onclick="pauseCampaign(3)">
+                                    <i class="fas fa-pause"></i> Pause
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="campaign-row" data-campaign-id="4">
+                        <div class="col-name">
+                            <div class="campaign-name">Product Launch</div>
+                        </div>
+                        <div class="col-status">
+                            <span class="status-badge ended">
+                                <i class="fas fa-stop"></i> Ended
+                            </span>
+                        </div>
+                        <div class="col-budget">$75/day</div>
+                        <div class="col-spend">$525.00</div>
+                        <div class="col-actions">
+                            <button class="action-menu-btn" onclick="toggleActionMenu(4)">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                            <div class="action-menu" id="actionMenu4">
+                                <button onclick="viewCampaign(4)">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                                <button onclick="duplicateCampaign(4)">
+                                    <i class="fas fa-copy"></i> Duplicate
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Campaign Creation Wizard Modal -->
+    <div class="modal-overlay" id="campaignWizardModal">
+        <div class="modal-content wizard-modal">
+            <div class="modal-header">
+                <button class="back-btn" onclick="closeCampaignWizard()">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </button>
+                <h2>Create New Campaign</h2>
+                <div class="step-indicator">
+                    <span>Step <span id="currentStep">1</span>/4</span>
+                </div>
+            </div>
+            
+            <div class="wizard-content">
+                <!-- Step 1: Campaign Details -->
+                <div class="wizard-step active" id="step1">
+                    <h3><i class="fas fa-edit"></i> Campaign Details</h3>
+                    
+                    <div class="form-group">
+                        <label for="campaignName">Campaign Name *</label>
+                        <input type="text" id="campaignName" placeholder="Summer Sale 2024" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="campaignGoal">Campaign Goal *</label>
+                        <select id="campaignGoal" required>
+                            <option value="">Select campaign goal...</option>
+                            <option value="OUTCOME_AWARENESS">Brand Awareness</option>
+                            <option value="OUTCOME_TRAFFIC">Website Traffic</option>
+                            <option value="OUTCOME_ENGAGEMENT">Engagement</option>
+                            <option value="OUTCOME_LEADS">Lead Generation</option>
+                            <option value="OUTCOME_APP_PROMOTION">App Promotion</option>
+                            <option value="OUTCOME_SALES">Sales</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="startDate">Start Date *</label>
+                            <input type="date" id="startDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="endDate">End Date (Optional)</label>
+                            <input type="date" id="endDate">
+                        </div>
+                    </div>
+                    
+                    <div class="info-box">
+                        <i class="fas fa-info-circle"></i>
+                        <span>Note: Campaign will use your ad account timezone (EST)</span>
+                    </div>
+                </div>
+
+                <!-- Step 2: Budget Configuration -->
+                <div class="wizard-step" id="step2">
+                    <h3><i class="fas fa-dollar-sign"></i> Budget Configuration</h3>
+                    
+                    <div class="budget-type-selector">
+                        <div class="radio-group">
+                            <label class="radio-option active">
+                                <input type="radio" name="budgetType" value="daily" checked>
+                                <span class="radio-custom"></span>
+                                Daily Budget
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="budgetType" value="lifetime">
+                                <span class="radio-custom"></span>
+                                Lifetime Budget
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="budgetAmount">Daily Budget Amount *</label>
+                        <div class="input-with-prefix">
+                            <span class="prefix">$</span>
+                            <input type="number" id="budgetAmount" placeholder="100.00" min="1" step="0.01" required>
+                        </div>
+                        <small class="help-text">Minimum: $1.00 USD</small>
+                    </div>
+                    
+                    <div class="budget-projection">
+                        <h4><i class="fas fa-chart-bar"></i> Budget Projection</h4>
+                        <div class="projection-details">
+                            <div class="projection-item">
+                                <span class="label">Campaign Duration:</span>
+                                <span class="value" id="campaignDuration">92 days</span>
+                            </div>
+                            <div class="projection-item">
+                                <span class="label">Maximum Total Spend:</span>
+                                <span class="value" id="maxSpend">$9,200.00</span>
+                            </div>
+                            <div class="projection-item">
+                                <span class="label">Estimated Daily Reach:</span>
+                                <span class="value">2,500 - 5,000 people</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="advanced-options">
+                        <h4><i class="fas fa-cog"></i> Advanced Options (Optional)</h4>
+                        <label class="checkbox-option">
+                            <input type="checkbox" id="enableFrequencyCap">
+                            <span class="checkbox-custom"></span>
+                            Enable Frequency Capping
+                        </label>
+                        <div class="frequency-cap-details" id="frequencyCapDetails" style="display: none;">
+                            <p>Limit: Show ad maximum 3 times per week</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="wizard-navigation">
+                    <button class="btn-secondary" id="prevBtn" onclick="previousStep()" style="display: none;">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <button class="btn-primary" id="nextBtn" onclick="nextStep()">
+                        Next <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
