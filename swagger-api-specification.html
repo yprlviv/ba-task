@@ -1,0 +1,2667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Partner API Specification - Facebook Ads Integration</title>
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/swagger-ui-dist@5.9.0/swagger-ui.css" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        .navbar {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            padding: 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+        
+        .nav-brand {
+            color: white;
+            font-size: 1.5em;
+            font-weight: 600;
+            text-decoration: none;
+            padding: 15px 0;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .nav-links li {
+            margin: 0;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 15px 20px;
+            display: block;
+            transition: background-color 0.3s ease;
+            border-radius: 5px;
+            margin: 5px;
+        }
+        
+        .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-links a.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            font-weight: 600;
+        }
+        
+        .main-wrapper {
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            font-weight: 300;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                padding: 10px 20px;
+            }
+            
+            .nav-brand {
+                padding: 10px 0;
+            }
+            
+            .nav-links {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .nav-links a {
+                text-align: center;
+                margin: 2px 0;
+            }
+            
+            .main-wrapper {
+                padding: 10px;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .header {
+                padding: 30px 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+        .swagger-container {
+            border: 1px solid #e3e3e3;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .info-section {
+            background: #f8f9fa;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+        }
+        .info-section h3 {
+            margin-top: 0;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-brand">Facebook Ads Integration</a>
+            <ul class="nav-links">
+                <li><a href="facebook-ads-manager.html">Ads Manager</a></li>
+                <li><a href="swagger-api-specification.html" class="active">API Spec</a></li>
+                <li><a href="requirements-analysis.html">Requirements</a></li>
+                <li><a href="customer-email.html">Email</a></li>
+                <li><a href="analysis-approach.html">Approach</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="main-wrapper">
+        <div class="container">
+            <div class="header">
+                <h1>Partner API Specification</h1>
+                <p>Facebook Ads Manager Integration - Campaign Management System</p>
+            </div>
+            
+            <div class="content">
+                <div class="swagger-container">
+                    <div id="swagger-ui"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/swagger-ui-dist@5.9.0/swagger-ui-bundle.js"></script>
+    <script>
+        const spec = {
+            "openapi": "3.0.3",
+            "info": {
+                "title": "Partner API - Facebook Ads Integration",
+                "description": "API specification for integrating with Facebook Ads Manager to support campaign management operations. This API handles campaign lifecycle, advertiser management, and synchronization with Facebook Marketing API v24.0.",
+                "version": "1.0.0",
+            },
+            "servers": [
+                {
+                    "url": "https://api.partner.com/v1",
+                    "description": "Production server"
+                },
+                {
+                    "url": "https://staging-api.partner.com/v1",
+                    "description": "Staging server"
+                }
+            ],
+            "security": [
+                {
+                    "BearerAuth": [],
+                    "FacebookAccessToken": []
+                }
+            ],
+            "tags": [
+                {
+                    "name": "Authentication",
+                    "description": "Partner API and Facebook token management"
+                },
+                {
+                    "name": "2. Ad Accounts",
+                    "description": "Ad Account discovery and management (Advertiser level)"
+                },
+                {
+                    "name": "3. Campaigns",
+                    "description": "Campaign lifecycle management (Level 1)"
+                },
+                {
+                    "name": "4. Ad Sets",
+                    "description": "Targeting and budget groups (Level 2)"
+                },
+                {
+                    "name": "5. Ad Creatives",
+                    "description": "Creative content management"
+                },
+                {
+                    "name": "6. Ads",
+                    "description": "Individual ad management (Level 3)"
+                },
+                {
+                    "name": "Assets",
+                    "description": "Media and creative assets"
+                },
+                {
+                    "name": "Custom Audiences (Optional)",
+                    "description": "Audience targeting and management - Optional for basic implementation"
+                },
+                {
+                    "name": "Analytics (Optional)",
+                    "description": "Performance metrics and insights - Optional for basic implementation"
+                },
+                {
+                    "name": "Sync & Verification",
+                    "description": "Campaign sync and verification operations"
+                },
+            ],
+            "components": {
+                "securitySchemes": {
+                    "BearerAuth": {
+                        "type": "http",
+                        "scheme": "bearer",
+                        "bearerFormat": "JWT",
+                        "description": "JWT token for partner API authentication"
+                    },
+                    "FacebookAccessToken": {
+                        "type": "apiKey",
+                        "in": "header",
+                        "name": "X-Facebook-Access-Token",
+                        "description": "Facebook Marketing API access token (User or System User token). Required for all Facebook API operations. See: https://developers.facebook.com/docs/marketing-api/get-started/authentication"
+                    },
+                    "ApiKeyAuth": {
+                        "type": "apiKey",
+                        "in": "header",
+                        "name": "X-API-Key",
+                        "description": "API key for service authentication"
+                    }
+                },
+                "schemas": {
+                    "Campaign": {
+                        "type": "object",
+                        "required": ["name", "buying_type", "start_date", "end_date", "budget", "goal"],
+                        "properties": {
+                            "id": {
+                                "type": "string",
+                                "description": "Unique campaign identifier",
+                                "example": "camp_123456789"
+                            },
+                            "name": {
+                                "type": "string",
+                                "description": "Campaign name",
+                                "example": "Summer Sale 2024",
+                                "maxLength": 255
+                            },
+                            "start_date": {
+                                "type": "string",
+                                "format": "date",
+                                "description": "Campaign start date (YYYY-MM-DD)",
+                                "example": "2024-06-01"
+                            },
+                            "end_date": {
+                                "type": "string",
+                                "format": "date",
+                                "description": "Campaign end date (YYYY-MM-DD)",
+                                "example": "2024-08-31"
+                            },
+                            "budget": {
+                                "type": "object",
+                                "required": ["amount", "type"],
+                                "properties": {
+                                    "amount": {
+                                        "type": "number",
+                                        "description": "Budget amount in cents",
+                                        "example": 100000,
+                                        "minimum": 100
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "enum": ["DAILY", "LIFETIME"],
+                                        "description": "Budget type",
+                                        "example": "DAILY"
+                                    }
+                                }
+                            },
+                            "buying_type": {
+                                "type": "string",
+                                "enum": ["AUCTION", "RESERVED"],
+                                "description": "Campaign buying type",
+                                "example": "AUCTION"
+                            },
+                            "goal": {
+                                "type": "string",
+                                "enum": ["AWARENESS", "TRAFFIC", "ENGAGEMENT", "LEADS", "APP_PROMOTION", "SALES"],
+                                "description": "Campaign objective/goal (IMMUTABLE after creation)",
+                                "example": "TRAFFIC"
+                            },
+                            "timezone": {
+                                "type": "string",
+                                "description": "Campaign timezone (READ-ONLY - inherited from Ad Account level)",
+                                "example": "America/New_York",
+                                "readOnly": true
+                            },
+                            "frequency_cap": {
+                                "type": "object",
+                                "description": "Frequency cap settings (implemented at Ad Set level in Facebook)",
+                                "properties": {
+                                    "impressions": {
+                                        "type": "integer",
+                                        "description": "Maximum impressions per user",
+                                        "example": 3,
+                                        "minimum": 1,
+                                        "maximum": 100
+                                    },
+                                    "period": {
+                                        "type": "string",
+                                        "enum": ["DAY", "WEEK", "MONTH"],
+                                        "description": "Frequency cap period",
+                                        "example": "DAY"
+                                    }
+                                }
+                            },
+                            "advertiser_id": {
+                                "type": "string",
+                                "description": "Associated advertiser ID",
+                                "example": "adv_987654321"
+                            },
+                            "facebook_campaign_id": {
+                                "type": "string",
+                                "description": "Facebook campaign ID (populated after sync)",
+                                "example": "23847234823948234"
+                            },
+                            "status": {
+                                "type": "string",
+                                "enum": ["ACTIVE", "PAUSED", "DELETED", "ARCHIVED"],
+                                "description": "Campaign status",
+                                "example": "ACTIVE"
+                            },
+                            "sync_status": {
+                                "type": "string",
+                                "enum": ["PENDING", "SYNCED", "FAILED", "NOT_SYNCED"],
+                                "description": "Facebook sync status",
+                                "example": "SYNCED"
+                            },
+                            "created_at": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Campaign creation timestamp",
+                                "example": "2024-05-15T10:30:00Z"
+                            },
+                            "updated_at": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Last update timestamp",
+                                "example": "2024-05-16T14:22:00Z"
+                            }
+                        }
+                    },
+                    "Advertiser": {
+                        "type": "object",
+                        "required": ["name", "category"],
+                        "properties": {
+                            "id": {
+                                "type": "string",
+                                "description": "Unique advertiser identifier",
+                                "example": "adv_987654321"
+                            },
+                            "name": {
+                                "type": "string",
+                                "description": "Advertiser name",
+                                "example": "Acme Corporation",
+                                "maxLength": 255
+                            },
+                            "category": {
+                                "type": "string",
+                                "enum": ["ECOMMERCE", "TECHNOLOGY", "HEALTHCARE", "FINANCE", "EDUCATION", "ENTERTAINMENT", "TRAVEL", "AUTOMOTIVE", "REAL_ESTATE", "OTHER"],
+                                "description": "Advertiser business category",
+                                "example": "ECOMMERCE"
+                            },
+                            "status": {
+                                "type": "string",
+                                "enum": ["ACTIVE", "INACTIVE"],
+                                "description": "Advertiser status (always ACTIVE for new advertisers)",
+                                "example": "ACTIVE"
+                            },
+                            "facebook_business_id": {
+                                "type": "string",
+                                "description": "Facebook Business Manager ID",
+                                "example": "123456789012345"
+                            },
+                            "facebook_ad_account_id": {
+                                "type": "string",
+                                "description": "Facebook Ad Account ID",
+                                "example": "act_123456789"
+                            },
+                            "sync_status": {
+                                "type": "string",
+                                "enum": ["PENDING", "SYNCED", "FAILED", "NOT_SYNCED"],
+                                "description": "Facebook sync status",
+                                "example": "SYNCED"
+                            },
+                            "created_at": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Advertiser creation timestamp",
+                                "example": "2024-05-15T10:30:00Z"
+                            }
+                        }
+                    },
+                    "SyncStatus": {
+                        "type": "object",
+                        "properties": {
+                            "entity_id": {
+                                "type": "string",
+                                "description": "Entity identifier",
+                                "example": "camp_123456789"
+                            },
+                            "entity_type": {
+                                "type": "string",
+                                "enum": ["CAMPAIGN", "ADVERTISER"],
+                                "description": "Entity type",
+                                "example": "CAMPAIGN"
+                            },
+                            "sync_status": {
+                                "type": "string",
+                                "enum": ["PENDING", "SYNCED", "FAILED", "NOT_SYNCED"],
+                                "description": "Current sync status",
+                                "example": "SYNCED"
+                            },
+                            "facebook_id": {
+                                "type": "string",
+                                "description": "Facebook entity ID",
+                                "example": "23847234823948234"
+                            },
+                            "last_sync_at": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Last successful sync timestamp",
+                                "example": "2024-05-16T14:22:00Z"
+                            },
+                            "error_message": {
+                                "type": "string",
+                                "description": "Error message if sync failed",
+                                "example": "Invalid access token"
+                            }
+                        }
+                    },
+                    "Ad": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "string",
+                                "description": "Unique ad identifier",
+                                "example": "23846234234234"
+                            },
+                            "name": {
+                                "type": "string",
+                                "description": "Ad name",
+                                "example": "Summer Sale Ad - Mobile"
+                            },
+                            "adset_id": {
+                                "type": "string",
+                                "description": "Parent ad set ID",
+                                "example": "23846234234233"
+                            },
+                            "campaign_id": {
+                                "type": "string",
+                                "description": "Parent campaign ID",
+                                "example": "23846234234232"
+                            },
+                            "creative": {
+                                "type": "object",
+                                "description": "Ad creative information",
+                                "properties": {
+                                    "id": {
+                                        "type": "string",
+                                        "example": "23846234234235"
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Summer Sale Creative"
+                                    }
+                                }
+                            },
+                            "status": {
+                                "type": "string",
+                                "enum": ["ACTIVE", "PAUSED", "DELETED", "ARCHIVED"],
+                                "description": "Ad status",
+                                "example": "ACTIVE"
+                            },
+                            "effective_status": {
+                                "type": "string",
+                                "description": "Computed status considering parent statuses",
+                                "example": "ACTIVE"
+                            },
+                            "configured_status": {
+                                "type": "string",
+                                "description": "User-configured status",
+                                "example": "ACTIVE"
+                            },
+                            "tracking_specs": {
+                                "type": "array",
+                                "description": "Conversion tracking specifications",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "action.type": {
+                                            "type": "string",
+                                            "example": "purchase"
+                                        },
+                                        "fb_pixel": {
+                                            "type": "string",
+                                            "example": "123456789012345"
+                                        }
+                                    }
+                                }
+                            },
+                            "created_time": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Ad creation timestamp",
+                                "example": "2024-06-01T10:00:00Z"
+                            },
+                            "updated_time": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "Last update timestamp",
+                                "example": "2024-06-15T14:30:00Z"
+                            },
+                            "facebook_ad_id": {
+                                "type": "string",
+                                "description": "Facebook Ad ID for sync tracking",
+                                "example": "23846234234234"
+                            },
+                            "sync_status": {
+                                "type": "string",
+                                "enum": ["PENDING", "SYNCED", "FAILED", "NOT_SYNCED"],
+                                "description": "Facebook synchronization status",
+                                "example": "SYNCED"
+                            }
+                        }
+                    },
+                    "Error": {
+                        "type": "object",
+                        "properties": {
+                            "error": {
+                                "type": "object",
+                                "properties": {
+                                    "code": {
+                                        "type": "string",
+                                        "description": "Error code",
+                                        "example": "VALIDATION_ERROR"
+                                    },
+                                    "message": {
+                                        "type": "string",
+                                        "description": "Error message",
+                                        "example": "Campaign name is required"
+                                    },
+                                    "details": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "field": {
+                                                    "type": "string",
+                                                    "example": "name"
+                                                },
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "This field is required"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "paths": {
+                "/auth/token": {
+                    "post": {
+                        "tags": ["Authentication"],
+                        "summary": "Get partner API token",
+                        "description": "Exchange credentials for partner API JWT token. This is separate from Facebook access tokens. **Facebook API Reference:** [Access Tokens](https://developers.facebook.com/docs/marketing-api/get-started/authentication)",
+                        "security": [],
+                        "requestBody": {
+                            "required": true,
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "type": "object",
+                                        "required": ["username", "password"],
+                                        "properties": {
+                                            "username": {
+                                                "type": "string",
+                                                "example": "user@company.com"
+                                            },
+                                            "password": {
+                                                "type": "string",
+                                                "example": "secure_password"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "responses": {
+                            "200": {
+                                "description": "Token generated successfully",
+                                "content": {
+                                    "application/json": {
+                                        "schema": {
+                                            "type": "object",
+                                            "properties": {
+                                                "access_token": {
+                                                    "type": "string",
+                                                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                                                },
+                                                "token_type": {
+                                                    "type": "string",
+                                                    "example": "Bearer"
+                                                },
+                                                "expires_in": {
+                                                    "type": "integer",
+                                                    "example": 3600
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "401": {
+                                "description": "Invalid credentials",
+                                "content": {
+                                    "application/json": {
+                                        "schema": {
+                                            "$ref": "#/components/schemas/Error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "/auth/facebook/token": {
+                    "post": {
+                        "tags": ["Authentication"],
+                        "summary": "Store Facebook access token",
+                        "description": "Store Facebook Marketing API access token for subsequent API calls. Token must have 'ads_management' or 'ads_read' permissions. **Facebook API Reference:** [Authentication](https://developers.facebook.com/docs/marketing-api/get-started/authentication)",
+                        "security": [
+                            {
+                                "BearerAuth": []
+                            }
+                        ],
+                        "requestBody": {
+                            "required": true,
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "type": "object",
+                                        "required": ["access_token", "token_type"],
+                                        "properties": {
+                                            "access_token": {
+                                                "type": "string",
+                                                "description": "Facebook Marketing API access token",
+                                                "example": "EAABwzLixnjYBAOZCZCPQmF..."
+                                            },
+                                            "token_type": {
+                                                "type": "string",
+                                                "enum": ["USER_ACCESS_TOKEN", "SYSTEM_USER_ACCESS_TOKEN"],
+                                                "description": "Type of Facebook access token",
+                                                "example": "USER_ACCESS_TOKEN"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "responses": {
+                            "200": {
+                                "description": "Facebook token stored successfully"
+                            },
+                            "400": {
+                                "description": "Invalid Facebook token or insufficient permissions"
+                            }
+                        }
+                    }
+                },
+                "/adaccounts": {
+                    "get": {
+                        "tags": ["2. Ad Accounts"],
+                        "summary": "List Facebook ad accounts",
+                        "description": "Get available Facebook ad accounts for campaign creation. **Facebook API Reference:** [Ad Account](https://developers.facebook.com/docs/marketing-api/reference/ad-account)",
+                        "parameters": [
+                            {
+                                "name": "page",
+                                "in": "query",
+                                "schema": {
+                                    "type": "integer",
+                                    "default": 1
+                                },
+                                "description": "Page number"
+                            },
+                            {
+                                "name": "limit",
+                                "in": "query",
+                                "schema": {
+                                    "type": "integer",
+                                    "default": 20,
+                                    "maximum": 100
+                                },
+                                "description": "Items per page"
+                            },
+                            {
+                                "name": "status",
+                                "in": "query",
+                                "schema": {
+                                    "type": "string",
+                                    "enum": ["ACTIVE", "INACTIVE"]
+                                },
+                                "description": "Filter by status"
+                            }
+                        ],
+                        "responses": {
+                            "200": {
+                                "description": "List of advertisers",
+                                "content": {
+                                    "application/json": {
+                                        "schema": {
+                                            "type": "object",
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Advertiser"
+                                                    }
+                                                },
+                                                "pagination": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "page": {"type": "integer"},
+                                                        "limit": {"type": "integer"},
+                                                        "total": {"type": "integer"},
+                                                        "pages": {"type": "integer"}
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "post": {
+                        "tags": ["2. Ad Accounts"],
+                        "summary": "Create advertiser",
+                        "description": "Create new business advertiser (auto-created with campaigns). **Facebook API Reference:** [Business Creation](https://developers.facebook.com/docs/marketing-api/reference/business#Creating)",
+                        "requestBody": {
+                            "required": true,
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "type": "object",
+                                        "required": ["name", "category"],
+                                        "properties": {
+                                            "name": {
+                                                "type": "string",
+                                                "example": "Acme Corporation"
+                                            },
+                                            "category": {
+                                                "type": "string",
+                                                "enum": ["ECOMMERCE", "TECHNOLOGY", "HEALTHCARE", "FINANCE", "EDUCATION", "ENTERTAINMENT", "TRAVEL", "AUTOMOTIVE", "REAL_ESTATE", "OTHER"],
+                                                "example": "ECOMMERCE"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "responses": {
+                            "201": {
+                                "description": "Advertiser created successfully",
+                                "content": {
+                                    "application/json": {
+                                        "schema": {
+                                            "$ref": "#/components/schemas/Advertiser"
+                                        }
+                                    }
+                                }
+                            },
+                            "400": {
+                                "description": "Validation error",
+                                "content": {
+                                    "application/json": {
+                                        "schema": {
+                                            "$ref": "#/components/schemas/Error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "/advertisers/{advertiser_id}": {
+                    "get": {
+                        "tags": ["2. Ad Accounts"],
+                        "summary": "Get advertiser details",
+                        "description": "Get specific advertiser information by ID. **Facebook API Reference:** [Business](https://developers.facebook.com/docs/marketing-api/reference/business)",
+                        "parameters": [
+                            {
+                                "name": "advertiser_id",
+                                "in": "path",
+                                "required": true,
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "description": "Advertiser ID"
+                            }
+                        ],
+                        "responses": {
+                            "200": {
+                                "description": "Advertiser details",
+                                "content": {
+                                    "application/json": {
+                                        "schema": {
+                                            "$ref": "#/components/schemas/Advertiser"
+                                        }
+                                    }
+                                }
+                            },
+                            "404": {
+                                "description": "Advertiser not found"
+                            }
+                        }
+                    }
+                },
+                "/campaigns": {
+                    "get": {
+                        "tags": ["3. Campaigns"],
+                        "summary": "List campaigns",
+                        "description": "Get all your advertising campaigns with filters. **Facebook API Reference:** [Campaign](https://developers.facebook.com/docs/marketing-api/reference/ad-campaign-group)",
+                        "parameters": [
+                            {
+                                "name": "page",
+                                "in": "query",
+                                "schema": {
+                                    "type": "integer",
+                                    "default": 1
+                                }
+                            },
+                            {
+                                "name": "limit",
+                                "in": "query",
+                                "schema": {
+                                    "type": "integer",
+                                    "default": 20,
+                                    "maximum": 100
+                                }
+                            },
+                            {
+                                "name": "advertiser_id",
+                                "in": "query",
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "description": "Filter by advertiser"
+                            },
+                            {
+                                "name": "status",
+                                "in": "query",
+                                "schema": {
+                                    "type": "string",
+                                    "enum": ["ACTIVE", "PAUSED", "DELETED", "ARCHIVED"]
+                                }
+                            },
+                            {
+                                "name": "sync_status",
+                                "in": "query",
+                                "schema": {
+                                    "type": "string",
+                                    "enum": ["PENDING", "SYNCED", "FAILED", "NOT_SYNCED"]
+                                }
+                            }
+                        ],
+                        "responses": {
+                            "200": {
+                                "description": "List of campaigns",
+                                "content": {
+                                    "application/json": {
+                                        "schema": {
+                                            "type": "object",
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Campaign"
+                                                    }
+                                                },
+                                                "pagination": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "page": {"type": "integer"},
+                                                        "limit": {"type": "integer"},
+                                                        "total": {"type": "integer"},
+                                                        "pages": {"type": "integer"}
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "post": {
+                        "tags": ["3. Campaigns"],
+                        "summary": "Create new campaign",
+                        "description": "Create campaign and sync to Facebook. Creates advertiser if needed. **Facebook API Reference:** [Campaign Creation](https://developers.facebook.com/docs/marketing-api/reference/ad-campaign-group#Creating)",
+                        "requestBody": {
+                            "required": true,
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "type": "object",
+                                        "required": ["name", "buying_type", "start_date", "end_date", "budget", "goal", "advertiser"],
+                                        "properties": {
+                                            "name": {
+                                                "type": "string",
+                                                "example": "Summer Sale 2024"
+                                            },
+                                            "start_date": {
+                                                "type": "string",
+                                                "format": "date",
+                                                "example": "2024-06-01"
+                                            },
+                                            "end_date": {
+                                                "type": "string",
+                                                "format": "date",
+                                                "example": "2024-08-31"
+                                            },
+                                            "budget": {
+                                                "type": "object",
+                                                "required": ["amount", "type"],
+                                                "properties": {
+                                                    "amount": {
+                                                        "type": "number",
+                                                        "example": 100000
+                                                    },
+                                                    "type": {
+                                                        "type": "string",
+                                                        "enum": ["DAILY", "LIFETIME"],
+                                                        "example": "DAILY"
+                                                    }
+                                                }
+                                            },
+                                            "buying_type": {
+                                                "type": "string",
+                                                "enum": ["AUCTION", "RESERVED"],
+                                                "description": "Campaign buying type",
+                                                "example": "AUCTION"
+                                            },
+                                            "goal": {
+                                                "type": "string",
+                                                "enum": ["AWARENESS", "TRAFFIC", "ENGAGEMENT", "LEADS", "APP_PROMOTION", "SALES"],
+                                                "example": "TRAFFIC"
+                                            },
+                                            "timezone": {
+                                                "type": "string",
+                                                "example": "America/New_York"
+                                            },
+                                            "frequency_cap": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "impressions": {
+                                                        "type": "integer",
+                                                        "example": 3
+                                                    },
+                                                    "period": {
+                                                        "type": "string",
+                                                        "enum": ["DAY", "WEEK", "MONTH"],
+                                                        "example": "DAY"
+                                                    }
+                                                }
+                                            },
+                                            "advertiser": {
+                                                "type": "object",
+                                                "description": "Advertiser info (will be created if doesn't exist)",
+                                                "oneOf": [
+                                                    {
+                                                        "type": "object",
+                                                        "required": ["id"],
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "string",
+                                                                "description": "Existing advertiser ID",
+                                                                "example": "adv_987654321"
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "type": "object",
+                                                        "required": ["name", "category"],
+                                                        "properties": {
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "Acme Corporation"
+                                                            },
+                                                            "category": {
+                                                                "type": "string",
+                                                                "enum": ["ECOMMERCE", "TECHNOLOGY", "HEALTHCARE", "FINANCE", "EDUCATION", "ENTERTAINMENT", "TRAVEL", "AUTOMOTIVE", "REAL_ESTATE", "OTHER"],
+                                                                "example": "ECOMMERCE"
+                                                            }
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "responses": {
+                            "201": {
+                                "description": "Campaign created successfully",
+                                "content": {
+                                    "application/json": {
+                                        "schema": {
+                                            "$ref": "#/components/schemas/Campaign"
+                                        }
+                                    }
+                                }
+                            },
+                            "400": {
+                                "description": "Validation error",
+                                "content": {
+                                    "application/json": {
+                                        "schema": {
+                                            "$ref": "#/components/schemas/Error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "/campaigns/{campaign_id}": {
+                    "get": {
+                        "tags": ["3. Campaigns"],
+                        "summary": "Get campaign details",
+                        "description": "Get specific campaign information and settings. **Facebook API Reference:** [Campaign](https://developers.facebook.com/docs/marketing-api/reference/ad-campaign-group)",
+                        "parameters": [
+                            {
+                                "name": "campaign_id",
+                                "in": "path",
+                                "required": true,
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        ],
+                        "responses": {
+                            "200": {
+                                "description": "Campaign details",
+                                "content": {
+                                    "application/json": {
+                                        "schema": {
+                                            "$ref": "#/components/schemas/Campaign"
+                                        }
+                                    }
+                                }
+                            },
+                            "404": {
+                                "description": "Campaign not found"
+                            }
+                        }
+                    },
+                    "put": {
+                        "tags": ["3. Campaigns"],
+                        "summary": "Modify campaign settings",
+                        "description": "Edit campaign settings like name, budget, dates, and status (objective cannot be changed after creation). **Facebook API Reference:** [Campaign Update](https://developers.facebook.com/docs/marketing-api/reference/ad-campaign-group#Updating)",
+                        "parameters": [
+                            {
+                                "name": "campaign_id",
+                                "in": "path",
+                                "required": true,
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        ],
+                        "requestBody": {
+                            "required": true,
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "type": "object",
+                                        "properties": {
+                                            "name": {
+                                                "type": "string",
+                                                "example": "Updated Summer Sale 2024"
+                                            },
+                                            "start_date": {
+                                                "type": "string",
+                                                "format": "date",
+                                                "example": "2024-06-01"
+                                            },
+                                            "end_date": {
+                                                "type": "string",
+                                                "format": "date",
+                                                "example": "2024-08-31"
+                                            },
+                                            "budget": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "amount": {
+                                                        "type": "number",
+                                                        "example": 150000
+                                                    },
+                                                    "type": {
+                                                        "type": "string",
+                                                        "enum": ["DAILY", "LIFETIME"],
+                                                        "example": "DAILY"
+                                                    }
+                                                }
+                                            },
+                                            "timezone": {
+                                                "type": "string",
+                                                "example": "America/New_York"
+                                            },
+                                            "frequency_cap": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "impressions": {
+                                                        "type": "integer",
+                                                        "example": 5
+                                                    },
+                                                    "period": {
+                                                        "type": "string",
+                                                        "enum": ["DAY", "WEEK", "MONTH"],
+                                                        "example": "DAY"
+                                                    }
+                                                }
+                                            },
+                                            "status": {
+                                                "type": "string",
+                                                "enum": ["ACTIVE", "PAUSED", "ARCHIVED"],
+                                                "example": "ACTIVE"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "responses": {
+                            "200": {
+                                "description": "Campaign updated successfully",
+                                "content": {
+                                    "application/json": {
+                                        "schema": {
+                                            "$ref": "#/components/schemas/Campaign"
+                                        }
+                                    }
+                                }
+                            },
+                            "400": {
+                                "description": "Validation error"
+                            },
+                            "404": {
+                                "description": "Campaign not found"
+                            }
+                        }
+                    },
+                    "delete": {
+                        "tags": ["3. Campaigns"],
+                        "summary": "Delete campaign permanently",
+                        "description": "Permanently remove campaign from both the system and Facebook (cannot be undone). **Facebook API Reference:** [Campaign Deletion](https://developers.facebook.com/docs/marketing-api/reference/ad-campaign-group#Deleting)",
+                        "parameters": [
+                            {
+                                "name": "campaign_id",
+                                "in": "path",
+                                "required": true,
+                                "schema": {
+                                    "type": "string"
+                                }
+                            },
+                            {
+                                "name": "force",
+                                "in": "query",
+                                "schema": {
+                                    "type": "boolean",
+                                    "default": false
+                                },
+                                "description": "Force delete even if Facebook sync fails"
+                            }
+                        ],
+                        "responses": {
+                            "204": {
+                                "description": "Campaign deleted successfully"
+                            },
+                            "404": {
+                                "description": "Campaign not found"
+                            },
+                            "409": {
+                                "description": "Cannot delete active campaign"
+                            }
+                        }
+                    }
+                },
+                "/campaigns/{campaign_id}/sync": {
+                    "post": {
+                        "tags": ["Sync & Verification"],
+                        "summary": "Sync campaign",
+                        "description": "Force sync campaign data with Facebook. **Facebook API Reference:** [Campaign](https://developers.facebook.com/docs/marketing-api/reference/ad-campaign-group)",
+                        "parameters": [
+                            {
+                                "name": "campaign_id",
+                                "in": "path",
+                                "required": true,
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        ],
+                        "responses": {
+                            "200": {
+                                "description": "Sync initiated successfully",
+                                "content": {
+                                    "application/json": {
+                                        "schema": {
+                                            "$ref": "#/components/schemas/SyncStatus"
+                                        }
+                                    }
+                                }
+                            },
+                            "404": {
+                                "description": "Campaign not found"
+                            }
+                        }
+                    }
+                },
+                "/campaigns/{campaign_id}/status": {
+                    "patch": {
+                        "tags": ["3. Campaigns"],
+                        "summary": "Pause, archive, or activate campaign",
+                        "description": "Change campaign status to pause advertising, archive for future reference, or reactivate campaigns. **Facebook API Reference:** [Campaign Status](https://developers.facebook.com/docs/marketing-api/reference/ad-campaign-group#fields)",
+                        "parameters": [
+                            {
+                                "name": "campaign_id",
+                                "in": "path",
+                                "required": true,
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        ],
+                        "requestBody": {
+                            "required": true,
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "type": "object",
+                                        "required": ["status"],
+                                        "properties": {
+                                            "status": {
+                                                "type": "string",
+                                                "enum": ["ACTIVE", "PAUSED", "ARCHIVED"],
+                                                "example": "PAUSED"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "responses": {
+                            "200": {
+                                "description": "Status updated successfully",
+                                "content": {
+                                    "application/json": {
+                                        "schema": {
+                                            "$ref": "#/components/schemas/Campaign"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "/advertisers/queue": {
+                    "post": {
+                        "tags": ["2. Ad Accounts"],
+                        "summary": "Queue advertiser setup",
+                        "description": "Queue new advertiser for manual Facebook Business verification. **Facebook API Reference:** [Business Manager](https://developers.facebook.com/docs/marketing-api/businessmanager)",
+                        "requestBody": {
+                            "required": true,
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "type": "object",
+                                        "required": ["name", "category", "contact_email"],
+                                        "properties": {
+                                            "name": {
+                                                "type": "string",
+                                                "example": "Acme Corporation"
+                                            },
+                                            "category": {
+                                                "type": "string",
+                                                "enum": ["ECOMMERCE", "TECHNOLOGY", "HEALTHCARE", "FINANCE", "EDUCATION", "ENTERTAINMENT", "TRAVEL", "AUTOMOTIVE", "REAL_ESTATE", "OTHER"],
+                                                "example": "ECOMMERCE"
+                                            },
+                                            "contact_email": {
+                                                "type": "string",
+                                                "format": "email",
+                                                "example": "admin@acme.com",
+                                                "description": "Contact email for Facebook Business verification"
+                                            },
+                                            "website_url": {
+                                                "type": "string",
+                                                "format": "uri",
+                                                "example": "https://www.acme.com"
+                                            },
+                                            "business_documents": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string"
+                                                },
+                                                "description": "URLs to uploaded business verification documents"
+                                            },
+                                            "priority": {
+                                                "type": "string",
+                                                "enum": ["LOW", "NORMAL", "HIGH", "URGENT"],
+                                                "default": "NORMAL",
+                                                "description": "Priority level for manual setup"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "responses": {
+                            "202": {
+                                "description": "Advertiser queued for manual setup",
+                                "content": {
+                                    "application/json": {
+                                        "schema": {
+                                            "type": "object",
+                                            "properties": {
+                                                "queue_id": {
+                                                    "type": "string",
+                                                    "example": "queue_123456789"
+                                                },
+                                                "advertiser_id": {
+                                                    "type": "string",
+                                                    "example": "adv_987654321"
+                                                },
+                                                "status": {
+                                                    "type": "string",
+                                                    "example": "QUEUED_FOR_SETUP"
+                                                },
+                                                "estimated_setup_time": {
+                                                    "type": "string",
+                                                    "example": "1-3 business days"
+                                                },
+                                                "next_steps": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    },
+                                                    "example": [
+                                                        "Admin will review business documents",
+                                                        "Facebook Business Manager account will be created",
+                                                        "Verification email will be sent to contact_email",
+                                                        "Payment method setup required"
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "400": {
+                                "description": "Invalid advertiser data"
+                            }
+                        }
+                    },
+                    "get": {
+                        "tags": ["2. Ad Accounts"],
+                        "summary": "Check setup queue",
+                        "description": "Get advertisers waiting for Facebook Business approval. **Facebook API Reference:** [Business Manager](https://developers.facebook.com/docs/marketing-api/businessmanager)",
+                        "parameters": [
+                            {
+                                "name": "status",
+                                "in": "query",
+                                "schema": {
+                                    "type": "string",
+                                    "enum": ["QUEUED_FOR_SETUP", "IN_PROGRESS", "SETUP_COMPLETE", "SETUP_FAILED"]
+                                },
+                                "description": "Filter by setup status"
+                            },
+                            {
+                                "name": "priority",
+                                "in": "query",
+                                "schema": {
+                                    "type": "string",
+                                    "enum": ["LOW", "NORMAL", "HIGH", "URGENT"]
+                                },
+                                "description": "Filter by priority level"
+                            }
+                        ],
+                        "responses": {
+                            "200": {
+                                "description": "Advertiser setup queue",
+                                "content": {
+                                    "application/json": {
+                                        "schema": {
+                                            "type": "object",
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "queue_id": {"type": "string"},
+                                                            "advertiser_id": {"type": "string"},
+                                                            "name": {"type": "string"},
+                                                            "category": {"type": "string"},
+                                                            "status": {"type": "string"},
+                                                            "priority": {"type": "string"},
+                                                            "queued_at": {"type": "string", "format": "date-time"},
+                                                            "estimated_completion": {"type": "string", "format": "date-time"}
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "/adaccounts": {
+                    "get": {
+                        "tags": ["2. Ad Accounts"],
+                        "summary": "List ad accounts",
+                        "description": "Get Facebook ad accounts accessible to your business. **Facebook API Reference:** [Ad Account](https://developers.facebook.com/docs/marketing-api/reference/ad-account)",
+                        "parameters": [
+                            {
+                                "name": "page",
+                                "in": "query",
+                                "schema": {
+                                    "type": "integer",
+                                    "default": 1
+                                }
+                            },
+                            {
+                                "name": "limit",
+                                "in": "query",
+                                "schema": {
+                                    "type": "integer",
+                                    "default": 20,
+                                    "maximum": 100
+                                }
+                            }
+                        ],
+                        "responses": {
+                            "200": {
+                                "description": "List of ad accounts",
+                                "content": {
+                                    "application/json": {
+                                        "schema": {
+                                            "type": "object",
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "string",
+                                                                "example": "act_123456789"
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "Acme Corp Ad Account"
+                                                            },
+                                                            "account_status": {
+                                                                "type": "integer",
+                                                                "example": 1,
+                                                                "description": "1=ACTIVE, 2=DISABLED, 3=UNSETTLED"
+                                                            },
+                                                            "currency": {
+                                                                "type": "string",
+                                                                "example": "USD"
+                                                            },
+                                                            "timezone_name": {
+                                                                "type": "string",
+                                                                "example": "America/New_York"
+                                                            },
+                                                            "business_id": {
+                                                                "type": "string",
+                                                                "example": "123456789012345"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "/campaigns/{campaign_id}/adsets": {
+                    "get": {
+                        "tags": ["4. Ad Sets"],
+                        "summary": "List ad sets",
+                        "description": "Get targeting and budget groups within a campaign. **Facebook API Reference:** [Ad Set](https://developers.facebook.com/docs/marketing-api/reference/ad-campaign)",
+                        "parameters": [
+                            {
+                                "name": "campaign_id",
+                                "in": "path",
+                                "required": true,
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        ],
+                        "responses": {
+                            "200": {
+                                "description": "List of ad sets",
+                                "content": {
+                                    "application/json": {
+                                        "schema": {
+                                            "type": "object",
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "string",
+                                                                "example": "adset_123456789"
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "Default Ad Set"
+                                                            },
+                                                            "status": {
+                                                                "type": "string",
+                                                                "enum": ["ACTIVE", "PAUSED", "DELETED", "ARCHIVED"]
+                                                            },
+                                                            "daily_budget": {
+                                                                "type": "integer",
+                                                                "description": "Daily budget in cents"
+                                                            },
+                                                            "targeting": {
+                                                                "type": "object",
+                                                                "description": "Targeting parameters"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "post": {
+                        "tags": ["4. Ad Sets"],
+                        "summary": "Create ad set",
+                        "description": "Create targeting group with budget and frequency caps. **Facebook API Reference:** [Ad Set Creation](https://developers.facebook.com/docs/marketing-api/reference/ad-campaign#Creating)",
+                        "parameters": [
+                            {
+                                "name": "campaign_id",
+                                "in": "path",
+                                "required": true,
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        ],
+                        "requestBody": {
+                            "required": true,
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "type": "object",
+                                        "required": ["name", "targeting", "billing_event", "optimization_goal"],
+                                        "properties": {
+                                            "name": {
+                                                "type": "string",
+                                                "example": "Default Ad Set"
+                                            },
+                                            "targeting": {
+                                                "type": "object",
+                                                "required": ["geo_locations"],
+                                                "properties": {
+                                                    "geo_locations": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "countries": {
+                                                                "type": "array",
+                                                                "items": {
+                                                                    "type": "string"
+                                                                },
+                                                                "example": ["US", "CA"]
+                                                            }
+                                                        }
+                                                    },
+                                                    "age_min": {
+                                                        "type": "integer",
+                                                        "minimum": 13,
+                                                        "maximum": 65,
+                                                        "example": 18
+                                                    },
+                                                    "age_max": {
+                                                        "type": "integer",
+                                                        "minimum": 13,
+                                                        "maximum": 65,
+                                                        "example": 65
+                                                    },
+                                                    "genders": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "integer",
+                                                            "enum": [1, 2]
+                                                        },
+                                                        "description": "1=Male, 2=Female",
+                                                        "example": [1, 2]
+                                                    }
+                                                }
+                                            },
+                                            "billing_event": {
+                                                "type": "string",
+                                                "enum": ["IMPRESSIONS", "CLICKS", "LINK_CLICKS"],
+                                                "example": "LINK_CLICKS"
+                                            },
+                                            "optimization_goal": {
+                                                "type": "string",
+                                                "enum": ["REACH", "LINK_CLICKS", "IMPRESSIONS", "CONVERSIONS"],
+                                                "example": "LINK_CLICKS"
+                                            },
+                                            "bid_amount": {
+                                                "type": "integer",
+                                                "description": "Bid amount in cents",
+                                                "example": 100
+                                            },
+                                            "daily_budget": {
+                                                "type": "integer",
+                                                "description": "Daily budget in cents",
+                                                "example": 5000
+                                            },
+                                            "frequency_cap": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "impressions": {
+                                                        "type": "integer",
+                                                        "example": 3
+                                                    },
+                                                    "period": {
+                                                        "type": "string",
+                                                        "enum": ["DAY", "WEEK", "MONTH"],
+                                                        "example": "DAY"
+                                                    }
+                                                }
+                                            },
+                                            "status": {
+                                                "type": "string",
+                                                "enum": ["ACTIVE", "PAUSED"],
+                                                "default": "PAUSED"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "responses": {
+                            "201": {
+                                "description": "Ad set created successfully",
+                                "content": {
+                                    "application/json": {
+                                        "schema": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "example": "adset_123456789"
+                                                },
+                                                "name": {
+                                                    "type": "string"
+                                                },
+                                                "status": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "/campaigns/{campaign_id}/insights": {
+                    "get": {
+                        "tags": ["Analytics (Optional)"],
+                        "summary": "Get campaign performance",
+                        "description": "Get clicks, impressions, spend, and conversion data. **Facebook API Reference:** [Insights](https://developers.facebook.com/docs/marketing-api/reference/ads-insights)",
+                        "parameters": [
+                            {
+                                "name": "campaign_id",
+                                "in": "path",
+                                "required": true,
+                                "schema": {
+                                    "type": "string"
+                                }
+                            },
+                            {
+                                "name": "fields",
+                                "in": "query",
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string",
+                                        "enum": ["impressions", "clicks", "spend", "reach", "frequency", "cpm", "cpc", "ctr", "conversions", "cost_per_conversion"]
+                                    }
+                                },
+                                "style": "form",
+                                "explode": false,
+                                "description": "Metrics to retrieve",
+                                "example": ["impressions", "clicks", "spend", "ctr"]
+                            },
+                            {
+                                "name": "time_range",
+                                "in": "query",
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "since": {
+                                            "type": "string",
+                                            "format": "date",
+                                            "example": "2024-01-01"
+                                        },
+                                        "until": {
+                                            "type": "string",
+                                            "format": "date",
+                                            "example": "2024-01-31"
+                                        }
+                                    }
+                                },
+                                "description": "Date range for insights"
+                            },
+                            {
+                                "name": "level",
+                                "in": "query",
+                                "schema": {
+                                    "type": "string",
+                                    "enum": ["campaign", "adset", "ad"],
+                                    "default": "campaign"
+                                },
+                                "description": "Aggregation level"
+                            }
+                        ],
+                        "responses": {
+                            "200": {
+                                "description": "Campaign insights data",
+                                "content": {
+                                    "application/json": {
+                                        "schema": {
+                                            "type": "object",
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "campaign_id": {
+                                                                "type": "string"
+                                                            },
+                                                            "impressions": {
+                                                                "type": "string",
+                                                                "example": "12345"
+                                                            },
+                                                            "clicks": {
+                                                                "type": "string",
+                                                                "example": "567"
+                                                            },
+                                                            "spend": {
+                                                                "type": "string",
+                                                                "example": "123.45"
+                                                            },
+                                                            "ctr": {
+                                                                "type": "string",
+                                                                "example": "4.59"
+                                                            },
+                                                            "cpm": {
+                                                                "type": "string",
+                                                                "example": "10.00"
+                                                            },
+                                                            "cpc": {
+                                                                "type": "string",
+                                                                "example": "0.22"
+                                                            },
+                                                            "date_start": {
+                                                                "type": "string",
+                                                                "format": "date"
+                                                            },
+                                                            "date_stop": {
+                                                                "type": "string",
+                                                                "format": "date"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "/adcreatives": {
+                    "post": {
+                        "tags": ["5. Ad Creatives"],
+                        "summary": "Create ad creative",
+                        "description": "Create ad content with images, text, and call-to-action buttons. **Facebook API Reference:** [Ad Creative](https://developers.facebook.com/docs/marketing-api/reference/ad-creative)",
+                        "requestBody": {
+                            "required": true,
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "type": "object",
+                                        "required": ["name", "object_story_spec"],
+                                        "properties": {
+                                            "name": {
+                                                "type": "string",
+                                                "example": "Summer Sale Creative"
+                                            },
+                                            "object_story_spec": {
+                                                "type": "object",
+                                                "required": ["page_id", "link_data"],
+                                                "properties": {
+                                                    "page_id": {
+                                                        "type": "string",
+                                                        "example": "123456789012345",
+                                                        "description": "Facebook Page ID"
+                                                    },
+                                                    "link_data": {
+                                                        "type": "object",
+                                                        "required": ["link", "message"],
+                                                        "properties": {
+                                                            "link": {
+                                                                "type": "string",
+                                                                "format": "uri",
+                                                                "example": "https://www.example.com/sale"
+                                                            },
+                                                            "message": {
+                                                                "type": "string",
+                                                                "example": "Don't miss our amazing summer sale! Up to 50% off."
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "Summer Sale - Up to 50% Off"
+                                                            },
+                                                            "description": {
+                                                                "type": "string",
+                                                                "example": "Limited time offer on all summer items"
+                                                            },
+                                                            "call_to_action": {
+                                                                "type": "object",
+                                                                "properties": {
+                                                                    "type": {
+                                                                        "type": "string",
+                                                                        "enum": ["SHOP_NOW", "LEARN_MORE", "SIGN_UP", "DOWNLOAD", "BOOK_TRAVEL", "LISTEN_MUSIC"],
+                                                                        "example": "SHOP_NOW"
+                                                                    }
+                                                                }
+                                                            },
+                                                            "image_hash": {
+                                                                "type": "string",
+                                                                "description": "Hash of uploaded image",
+                                                                "example": "abc123def456"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "responses": {
+                            "201": {
+                                "description": "Ad creative created successfully",
+                                "content": {
+                                    "application/json": {
+                                        "schema": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "example": "creative_123456789"
+                                                },
+                                                "name": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "/adsets/{adset_id}/ads": {
+                    "get": {
+                        "tags": ["6. Ads"],
+                        "summary": "List ads in ad set",
+                        "description": "Get all ads within a specific ad set. **Facebook API Reference:** [Ad](https://developers.facebook.com/docs/marketing-api/reference/adgroup)",
+                        "parameters": [
+                            {
+                                "name": "adset_id",
+                                "in": "path",
+                                "required": true,
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "description": "Ad Set ID"
+                            },
+                            {
+                                "name": "page",
+                                "in": "query",
+                                "schema": {
+                                    "type": "integer",
+                                    "default": 1
+                                },
+                                "description": "Page number"
+                            },
+                            {
+                                "name": "limit",
+                                "in": "query",
+                                "schema": {
+                                    "type": "integer",
+                                    "default": 20,
+                                    "maximum": 100
+                                },
+                                "description": "Items per page"
+                            },
+                            {
+                                "name": "status",
+                                "in": "query",
+                                "schema": {
+                                    "type": "string",
+                                    "enum": ["ACTIVE", "PAUSED", "DELETED", "ARCHIVED"]
+                                },
+                                "description": "Filter by ad status"
+                            }
+                        ],
+                        "responses": {
+                            "200": {
+                                "description": "List of ads",
+                                "content": {
+                                    "application/json": {
+                                        "schema": {
+                                            "type": "object",
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Ad"
+                                                    }
+                                                },
+                                                "pagination": {
+                                                    "$ref": "#/components/schemas/Pagination"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "404": {
+                                "description": "Ad Set not found"
+                            }
+                        }
+                    },
+                    "post": {
+                        "tags": ["6. Ads"],
+                        "summary": "Create new ad",
+                        "description": "Create a new ad within an ad set using existing creative. **Facebook API Reference:** [Ad Creation](https://developers.facebook.com/docs/marketing-api/reference/adgroup#Creating)",
+                        "parameters": [
+                            {
+                                "name": "adset_id",
+                                "in": "path",
+                                "required": true,
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "description": "Ad Set ID"
+                            }
+                        ],
+                        "requestBody": {
+                            "required": true,
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "type": "object",
+                                        "required": ["name", "creative_id", "status"],
+                                        "properties": {
+                                            "name": {
+                                                "type": "string",
+                                                "example": "Summer Sale Ad - Mobile"
+                                            },
+                                            "creative_id": {
+                                                "type": "string",
+                                                "description": "ID of existing ad creative",
+                                                "example": "23846234234234"
+                                            },
+                                            "status": {
+                                                "type": "string",
+                                                "enum": ["ACTIVE", "PAUSED"],
+                                                "default": "PAUSED",
+                                                "example": "PAUSED"
+                                            },
+                                            "tracking_specs": {
+                                                "type": "array",
+                                                "description": "Conversion tracking specifications",
+                                                "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "action.type": {
+                                                            "type": "string",
+                                                            "enum": ["page_view", "purchase", "lead", "complete_registration"]
+                                                        },
+                                                        "fb_pixel": {
+                                                            "type": "string"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "responses": {
+                            "201": {
+                                "description": "Ad created successfully",
+                                "content": {
+                                    "application/json": {
+                                        "schema": {
+                                            "$ref": "#/components/schemas/Ad"
+                                        }
+                                    }
+                                }
+                            },
+                            "400": {
+                                "description": "Invalid ad data"
+                            },
+                            "404": {
+                                "description": "Ad Set or Creative not found"
+                            }
+                        }
+                    }
+                },
+                "/ads/{ad_id}": {
+                    "get": {
+                        "tags": ["6. Ads"],
+                        "summary": "Get ad details",
+                        "description": "Get specific ad information and settings. **Facebook API Reference:** [Ad](https://developers.facebook.com/docs/marketing-api/reference/adgroup)",
+                        "parameters": [
+                            {
+                                "name": "ad_id",
+                                "in": "path",
+                                "required": true,
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "description": "Ad ID"
+                            }
+                        ],
+                        "responses": {
+                            "200": {
+                                "description": "Ad details",
+                                "content": {
+                                    "application/json": {
+                                        "schema": {
+                                            "$ref": "#/components/schemas/Ad"
+                                        }
+                                    }
+                                }
+                            },
+                            "404": {
+                                "description": "Ad not found"
+                            }
+                        }
+                    },
+                    "put": {
+                        "tags": ["6. Ads"],
+                        "summary": "Update ad",
+                        "description": "Update ad settings (creative cannot be changed after creation). **Facebook API Reference:** [Ad Update](https://developers.facebook.com/docs/marketing-api/reference/adgroup#Updating)",
+                        "parameters": [
+                            {
+                                "name": "ad_id",
+                                "in": "path",
+                                "required": true,
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "description": "Ad ID"
+                            }
+                        ],
+                        "requestBody": {
+                            "required": true,
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "type": "object",
+                                        "properties": {
+                                            "name": {
+                                                "type": "string",
+                                                "example": "Updated Summer Sale Ad"
+                                            },
+                                            "status": {
+                                                "type": "string",
+                                                "enum": ["ACTIVE", "PAUSED", "ARCHIVED"],
+                                                "example": "ACTIVE"
+                                            },
+                                            "tracking_specs": {
+                                                "type": "array",
+                                                "description": "Updated conversion tracking",
+                                                "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "action.type": {
+                                                            "type": "string"
+                                                        },
+                                                        "fb_pixel": {
+                                                            "type": "string"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "responses": {
+                            "200": {
+                                "description": "Ad updated successfully",
+                                "content": {
+                                    "application/json": {
+                                        "schema": {
+                                            "$ref": "#/components/schemas/Ad"
+                                        }
+                                    }
+                                }
+                            },
+                            "400": {
+                                "description": "Invalid ad data"
+                            },
+                            "404": {
+                                "description": "Ad not found"
+                            }
+                        }
+                    },
+                    "delete": {
+                        "tags": ["6. Ads"],
+                        "summary": "Delete ad",
+                        "description": "Delete ad from ad set and Facebook. **Facebook API Reference:** [Ad Deletion](https://developers.facebook.com/docs/marketing-api/reference/adgroup#Deleting)",
+                        "parameters": [
+                            {
+                                "name": "ad_id",
+                                "in": "path",
+                                "required": true,
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "description": "Ad ID"
+                            }
+                        ],
+                        "responses": {
+                            "200": {
+                                "description": "Ad deleted successfully",
+                                "content": {
+                                    "application/json": {
+                                        "schema": {
+                                            "type": "object",
+                                            "properties": {
+                                                "success": {
+                                                    "type": "boolean",
+                                                    "example": true
+                                                },
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Ad deleted successfully"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "404": {
+                                "description": "Ad not found"
+                            }
+                        }
+                    }
+                },
+                "/ads/{ad_id}/insights": {
+                    "get": {
+                        "tags": ["Analytics (Optional)"],
+                        "summary": "Get ad performance",
+                        "description": "Get performance metrics for a specific ad. **Facebook API Reference:** [Ad Insights](https://developers.facebook.com/docs/marketing-api/reference/adgroup/insights)",
+                        "parameters": [
+                            {
+                                "name": "ad_id",
+                                "in": "path",
+                                "required": true,
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "description": "Ad ID"
+                            },
+                            {
+                                "name": "date_preset",
+                                "in": "query",
+                                "schema": {
+                                    "type": "string",
+                                    "enum": ["today", "yesterday", "last_7_days", "last_14_days", "last_30_days", "lifetime"],
+                                    "default": "last_7_days"
+                                },
+                                "description": "Date range preset"
+                            },
+                            {
+                                "name": "fields",
+                                "in": "query",
+                                "schema": {
+                                    "type": "string",
+                                    "default": "impressions,clicks,spend,cpm,ctr,conversions"
+                                },
+                                "description": "Comma-separated list of metrics"
+                            }
+                        ],
+                        "responses": {
+                            "200": {
+                                "description": "Ad performance data",
+                                "content": {
+                                    "application/json": {
+                                        "schema": {
+                                            "type": "object",
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "ad_id": {
+                                                                "type": "string",
+                                                                "example": "23846234234234"
+                                                            },
+                                                            "impressions": {
+                                                                "type": "string",
+                                                                "example": "12543"
+                                                            },
+                                                            "clicks": {
+                                                                "type": "string",
+                                                                "example": "234"
+                                                            },
+                                                            "spend": {
+                                                                "type": "string",
+                                                                "example": "45.67"
+                                                            },
+                                                            "cpm": {
+                                                                "type": "string",
+                                                                "example": "3.64"
+                                                            },
+                                                            "ctr": {
+                                                                "type": "string",
+                                                                "example": "1.87"
+                                                            },
+                                                            "conversions": {
+                                                                "type": "string",
+                                                                "example": "12"
+                                                            },
+                                                            "date_start": {
+                                                                "type": "string",
+                                                                "format": "date",
+                                                                "example": "2024-10-07"
+                                                            },
+                                                            "date_stop": {
+                                                                "type": "string",
+                                                                "format": "date",
+                                                                "example": "2024-10-14"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "404": {
+                                "description": "Ad not found"
+                            }
+                        }
+                    }
+                },
+                "/adimages": {
+                    "post": {
+                        "tags": ["Assets"],
+                        "summary": "Upload image",
+                        "description": "Upload image for ads (returns hash for creative creation). **Facebook API Reference:** [Ad Image](https://developers.facebook.com/docs/marketing-api/reference/ad-image)",
+                        "requestBody": {
+                            "required": true,
+                            "content": {
+                                "multipart/form-data": {
+                                    "schema": {
+                                        "type": "object",
+                                        "required": ["image"],
+                                        "properties": {
+                                            "image": {
+                                                "type": "string",
+                                                "format": "binary",
+                                                "description": "Image file (JPG, PNG, GIF)"
+                                            },
+                                            "name": {
+                                                "type": "string",
+                                                "description": "Optional image name",
+                                                "example": "summer-sale-banner.jpg"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "responses": {
+                            "201": {
+                                "description": "Image uploaded successfully",
+                                "content": {
+                                    "application/json": {
+                                        "schema": {
+                                            "type": "object",
+                                            "properties": {
+                                                "hash": {
+                                                    "type": "string",
+                                                    "example": "abc123def456",
+                                                    "description": "Image hash for use in creatives"
+                                                },
+                                                "url": {
+                                                    "type": "string",
+                                                    "format": "uri",
+                                                    "example": "https://scontent.xx.fbcdn.net/v/..."
+                                                },
+                                                "width": {
+                                                    "type": "integer",
+                                                    "example": 1200
+                                                },
+                                                "height": {
+                                                    "type": "integer",
+                                                    "example": 628
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "400": {
+                                "description": "Invalid image format or size"
+                            }
+                        }
+                    }
+                },
+                "/customaudiences": {
+                    "get": {
+                        "tags": ["Custom Audiences (Optional)"],
+                        "summary": "List audiences",
+                        "description": "Get custom audiences for advanced targeting. **Facebook API Reference:** [Custom Audience](https://developers.facebook.com/docs/marketing-api/reference/custom-audience)",
+                        "responses": {
+                            "200": {
+                                "description": "List of custom audiences",
+                                "content": {
+                                    "application/json": {
+                                        "schema": {
+                                            "type": "object",
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "string",
+                                                                "example": "audience_123456789"
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "Website Visitors"
+                                                            },
+                                                            "subtype": {
+                                                                "type": "string",
+                                                                "example": "WEBSITE"
+                                                            },
+                                                            "approximate_count": {
+                                                                "type": "integer",
+                                                                "example": 15000
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "post": {
+                        "tags": ["Custom Audiences (Optional)"],
+                        "summary": "Create audience",
+                        "description": "Create custom audience (website visitors, customer lists, etc.). **Facebook API Reference:** [Custom Audience Creation](https://developers.facebook.com/docs/marketing-api/reference/custom-audience#Creating)",
+                        "requestBody": {
+                            "required": true,
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "type": "object",
+                                        "required": ["name", "subtype"],
+                                        "properties": {
+                                            "name": {
+                                                "type": "string",
+                                                "example": "Website Visitors - Last 30 Days"
+                                            },
+                                            "subtype": {
+                                                "type": "string",
+                                                "enum": ["WEBSITE", "CUSTOMER_FILE", "MOBILE_APP", "OFFLINE_CONVERSION", "LOOKALIKE"],
+                                                "example": "WEBSITE"
+                                            },
+                                            "description": {
+                                                "type": "string",
+                                                "example": "People who visited our website in the last 30 days"
+                                            },
+                                            "retention_days": {
+                                                "type": "integer",
+                                                "minimum": 1,
+                                                "maximum": 180,
+                                                "example": 30,
+                                                "description": "Days to retain audience members"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "responses": {
+                            "201": {
+                                "description": "Custom audience created successfully",
+                                "content": {
+                                    "application/json": {
+                                        "schema": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "example": "audience_123456789"
+                                                },
+                                                "name": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "/sync/status": {
+                    "get": {
+                        "tags": ["Sync & Verification"],
+                        "summary": "Check sync status",
+                        "description": "See which campaigns/advertisers are synced with Facebook. **Facebook API Reference:** [Batch Requests](https://developers.facebook.com/docs/graph-api/making-multiple-requests)",
+                        "parameters": [
+                            {
+                                "name": "entity_type",
+                                "in": "query",
+                                "schema": {
+                                    "type": "string",
+                                    "enum": ["CAMPAIGN", "ADVERTISER"]
+                                }
+                            },
+                            {
+                                "name": "sync_status",
+                                "in": "query",
+                                "schema": {
+                                    "type": "string",
+                                    "enum": ["PENDING", "SYNCED", "FAILED", "NOT_SYNCED"]
+                                }
+                            }
+                        ],
+                        "responses": {
+                            "200": {
+                                "description": "Sync status information",
+                                "content": {
+                                    "application/json": {
+                                        "schema": {
+                                            "type": "object",
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/SyncStatus"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "/sync/retry": {
+                    "post": {
+                        "tags": ["Sync & Verification"],
+                        "summary": "Retry sync",
+                        "description": "Retry failed Facebook synchronization. **Facebook API Reference:** [Error Handling](https://developers.facebook.com/docs/graph-api/using-graph-api/error-handling)",
+                        "requestBody": {
+                            "required": true,
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "type": "object",
+                                        "properties": {
+                                            "entity_ids": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string"
+                                                },
+                                                "description": "List of entity IDs to retry sync",
+                                                "example": ["camp_123456789", "adv_987654321"]
+                                            },
+                                            "entity_type": {
+                                                "type": "string",
+                                                "enum": ["CAMPAIGN", "ADVERTISER"],
+                                                "description": "Type of entities to retry"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "responses": {
+                            "200": {
+                                "description": "Retry initiated successfully",
+                                "content": {
+                                    "application/json": {
+                                        "schema": {
+                                            "type": "object",
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "example": "Sync retry initiated for 2 entities"
+                                                },
+                                                "retry_count": {
+                                                    "type": "integer",
+                                                    "example": 2
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        SwaggerUIBundle({
+            url: '',
+            spec: spec,
+            dom_id: '#swagger-ui',
+            deepLinking: true,
+            presets: [
+                SwaggerUIBundle.presets.apis,
+                SwaggerUIBundle.presets.standalone
+            ],
+            plugins: [
+                SwaggerUIBundle.plugins.DownloadUrl
+            ],
+            layout: "BaseLayout",
+            validatorUrl: null,
+            tryItOutEnabled: true,
+            supportedSubmitMethods: ['get', 'post', 'put', 'delete', 'patch'],
+            defaultModelsExpandDepth: -1, // Hide schemas section
+            docExpansion: 'list', // Only show operation summaries
+            filter: false, // Disable filtering
+            showExtensions: true,
+            showCommonExtensions: true,
+            onComplete: function() {
+                console.log("Swagger UI loaded successfully");
+                // Hide schemas section completely
+                setTimeout(() => {
+                    const schemasSection = document.querySelector('.models');
+                    if (schemasSection) {
+                        schemasSection.style.display = 'none';
+                    }
+                    // Also hide any "Schemas" or "Models" sections
+                    const modelsSections = document.querySelectorAll('.model-container, .models-container, [id*="model"], [id*="schema"]');
+                    modelsSections.forEach(section => {
+                        if (section.textContent.toLowerCase().includes('schema') || 
+                            section.textContent.toLowerCase().includes('model')) {
+                            section.style.display = 'none';
+                        }
+                    });
+                }, 1000);
+            }
+        });
+    </script>
+</body>
+</html>
