@@ -219,7 +219,7 @@
                 },
                 {
                     "name": "2. Ad Accounts",
-                    "description": "Ad Account discovery and management (Advertiser level)"
+                    "description": "Facebook Ad Account discovery and local advertiser management. Note: Facebook Ad Account creation requires manual Business Manager setup for most applications."
                 },
                 {
                     "name": "3. Campaigns",
@@ -729,8 +729,8 @@
                 "/adaccounts": {
                     "get": {
                         "tags": ["2. Ad Accounts"],
-                        "summary": "List Facebook ad accounts",
-                        "description": "Get available Facebook ad accounts for campaign creation. **Facebook API Reference:** [Ad Account](https://developers.facebook.com/docs/marketing-api/reference/ad-account)",
+                        "summary": "Discover Facebook ad accounts",
+                        "description": "List existing Facebook ad accounts accessible to your Business Manager. Note: Ad accounts must be manually created through Facebook Business Manager - API cannot create new accounts for most applications. **Facebook API Reference:** [Ad Account](https://developers.facebook.com/docs/marketing-api/reference/ad-account)",
                         "parameters": [
                             {
                                 "name": "page",
@@ -763,7 +763,7 @@
                         ],
                         "responses": {
                             "200": {
-                                "description": "List of advertisers",
+                                "description": "List of accessible Facebook ad accounts",
                                 "content": {
                                     "application/json": {
                                         "schema": {
@@ -793,8 +793,8 @@
                     },
                     "post": {
                         "tags": ["2. Ad Accounts"],
-                        "summary": "Create advertiser",
-                        "description": "Create new business advertiser (auto-created with campaigns). **Facebook API Reference:** [Business Creation](https://developers.facebook.com/docs/marketing-api/reference/business#Creating)",
+                        "summary": "Create local advertiser record",
+                        "description": "Create advertiser record in local system only. Note: Facebook Ad Account creation requires manual Business Manager setup - see requirements analysis for limitations. **Facebook API Reference:** [Business Manager Setup](https://developers.facebook.com/docs/marketing-api/businessmanager)",
                         "requestBody": {
                             "required": true,
                             "content": {
@@ -819,7 +819,7 @@
                         },
                         "responses": {
                             "201": {
-                                "description": "Advertiser created successfully",
+                                "description": "Local advertiser record created (Facebook integration pending manual setup)",
                                 "content": {
                                     "application/json": {
                                         "schema": {
@@ -844,8 +844,8 @@
                 "/advertisers/{advertiser_id}": {
                     "get": {
                         "tags": ["2. Ad Accounts"],
-                        "summary": "Get advertiser details",
-                        "description": "Get specific advertiser information by ID. **Facebook API Reference:** [Business](https://developers.facebook.com/docs/marketing-api/reference/business)",
+                        "summary": "Get local advertiser record",
+                        "description": "Get local advertiser record details. For Facebook Ad Account details, use /adaccounts/{account_id}. **Facebook API Reference:** [Ad Account](https://developers.facebook.com/docs/marketing-api/reference/ad-account)",
                         "parameters": [
                             {
                                 "name": "advertiser_id",
@@ -859,7 +859,7 @@
                         ],
                         "responses": {
                             "200": {
-                                "description": "Advertiser details",
+                                "description": "Local advertiser record details",
                                 "content": {
                                     "application/json": {
                                         "schema": {
@@ -1325,228 +1325,71 @@
                         }
                     }
                 },
-                "/advertisers/queue": {
-                    "post": {
-                        "tags": ["2. Ad Accounts"],
-                        "summary": "Queue advertiser setup",
-                        "description": "Queue new advertiser for manual Facebook Business verification. **Facebook API Reference:** [Business Manager](https://developers.facebook.com/docs/marketing-api/businessmanager)",
-                        "requestBody": {
-                            "required": true,
-                            "content": {
-                                "application/json": {
-                                    "schema": {
-                                        "type": "object",
-                                        "required": ["name", "category", "contact_email"],
-                                        "properties": {
-                                            "name": {
-                                                "type": "string",
-                                                "example": "Acme Corporation"
-                                            },
-                                            "category": {
-                                                "type": "string",
-                                                "enum": ["ECOMMERCE", "TECHNOLOGY", "HEALTHCARE", "FINANCE", "EDUCATION", "ENTERTAINMENT", "TRAVEL", "AUTOMOTIVE", "REAL_ESTATE", "OTHER"],
-                                                "example": "ECOMMERCE"
-                                            },
-                                            "contact_email": {
-                                                "type": "string",
-                                                "format": "email",
-                                                "example": "admin@acme.com",
-                                                "description": "Contact email for Facebook Business verification"
-                                            },
-                                            "website_url": {
-                                                "type": "string",
-                                                "format": "uri",
-                                                "example": "https://www.acme.com"
-                                            },
-                                            "business_documents": {
-                                                "type": "array",
-                                                "items": {
-                                                    "type": "string"
-                                                },
-                                                "description": "URLs to uploaded business verification documents"
-                                            },
-                                            "priority": {
-                                                "type": "string",
-                                                "enum": ["LOW", "NORMAL", "HIGH", "URGENT"],
-                                                "default": "NORMAL",
-                                                "description": "Priority level for manual setup"
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        "responses": {
-                            "202": {
-                                "description": "Advertiser queued for manual setup",
-                                "content": {
-                                    "application/json": {
-                                        "schema": {
-                                            "type": "object",
-                                            "properties": {
-                                                "queue_id": {
-                                                    "type": "string",
-                                                    "example": "queue_123456789"
-                                                },
-                                                "advertiser_id": {
-                                                    "type": "string",
-                                                    "example": "adv_987654321"
-                                                },
-                                                "status": {
-                                                    "type": "string",
-                                                    "example": "QUEUED_FOR_SETUP"
-                                                },
-                                                "estimated_setup_time": {
-                                                    "type": "string",
-                                                    "example": "1-3 business days"
-                                                },
-                                                "next_steps": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string"
-                                                    },
-                                                    "example": [
-                                                        "Admin will review business documents",
-                                                        "Facebook Business Manager account will be created",
-                                                        "Verification email will be sent to contact_email",
-                                                        "Payment method setup required"
-                                                    ]
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            "400": {
-                                "description": "Invalid advertiser data"
-                            }
-                        }
-                    },
+                "/adaccounts/{account_id}": {
                     "get": {
                         "tags": ["2. Ad Accounts"],
-                        "summary": "Check setup queue",
-                        "description": "Get advertisers waiting for Facebook Business approval. **Facebook API Reference:** [Business Manager](https://developers.facebook.com/docs/marketing-api/businessmanager)",
+                        "summary": "Get Facebook ad account details",
+                        "description": "Get specific Facebook ad account information including timezone, currency, and status. **Facebook API Reference:** [Ad Account](https://developers.facebook.com/docs/marketing-api/reference/ad-account)",
                         "parameters": [
                             {
-                                "name": "status",
-                                "in": "query",
+                                "name": "account_id",
+                                "in": "path",
+                                "required": true,
                                 "schema": {
-                                    "type": "string",
-                                    "enum": ["QUEUED_FOR_SETUP", "IN_PROGRESS", "SETUP_COMPLETE", "SETUP_FAILED"]
+                                    "type": "string"
                                 },
-                                "description": "Filter by setup status"
-                            },
-                            {
-                                "name": "priority",
-                                "in": "query",
-                                "schema": {
-                                    "type": "string",
-                                    "enum": ["LOW", "NORMAL", "HIGH", "URGENT"]
-                                },
-                                "description": "Filter by priority level"
+                                "description": "Facebook Ad Account ID (e.g., act_123456789)"
                             }
                         ],
                         "responses": {
                             "200": {
-                                "description": "Advertiser setup queue",
+                                "description": "Ad account details",
                                 "content": {
                                     "application/json": {
                                         "schema": {
                                             "type": "object",
                                             "properties": {
-                                                "data": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "object",
-                                                        "properties": {
-                                                            "queue_id": {"type": "string"},
-                                                            "advertiser_id": {"type": "string"},
-                                                            "name": {"type": "string"},
-                                                            "category": {"type": "string"},
-                                                            "status": {"type": "string"},
-                                                            "priority": {"type": "string"},
-                                                            "queued_at": {"type": "string", "format": "date-time"},
-                                                            "estimated_completion": {"type": "string", "format": "date-time"}
-                                                        }
-                                                    }
+                                                "id": {
+                                                    "type": "string",
+                                                    "example": "act_123456789"
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Acme Corp Ad Account"
+                                                },
+                                                "account_status": {
+                                                    "type": "integer",
+                                                    "example": 1,
+                                                    "description": "1=ACTIVE, 2=DISABLED, 3=UNSETTLED"
+                                                },
+                                                "currency": {
+                                                    "type": "string",
+                                                    "example": "USD"
+                                                },
+                                                "timezone_name": {
+                                                    "type": "string",
+                                                    "example": "America/New_York",
+                                                    "description": "Account-level timezone (cannot be changed per campaign)"
+                                                },
+                                                "business_id": {
+                                                    "type": "string",
+                                                    "example": "123456789012345"
+                                                },
+                                                "spend_cap": {
+                                                    "type": "integer",
+                                                    "description": "Account spending limit in cents"
+                                                },
+                                                "amount_spent": {
+                                                    "type": "integer",
+                                                    "description": "Total amount spent in cents"
                                                 }
                                             }
                                         }
                                     }
-                                }
-                            }
-                        }
-                    }
-                },
-                "/adaccounts": {
-                    "get": {
-                        "tags": ["2. Ad Accounts"],
-                        "summary": "List ad accounts",
-                        "description": "Get Facebook ad accounts accessible to your business. **Facebook API Reference:** [Ad Account](https://developers.facebook.com/docs/marketing-api/reference/ad-account)",
-                        "parameters": [
-                            {
-                                "name": "page",
-                                "in": "query",
-                                "schema": {
-                                    "type": "integer",
-                                    "default": 1
                                 }
                             },
-                            {
-                                "name": "limit",
-                                "in": "query",
-                                "schema": {
-                                    "type": "integer",
-                                    "default": 20,
-                                    "maximum": 100
-                                }
-                            }
-                        ],
-                        "responses": {
-                            "200": {
-                                "description": "List of ad accounts",
-                                "content": {
-                                    "application/json": {
-                                        "schema": {
-                                            "type": "object",
-                                            "properties": {
-                                                "data": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "object",
-                                                        "properties": {
-                                                            "id": {
-                                                                "type": "string",
-                                                                "example": "act_123456789"
-                                                            },
-                                                            "name": {
-                                                                "type": "string",
-                                                                "example": "Acme Corp Ad Account"
-                                                            },
-                                                            "account_status": {
-                                                                "type": "integer",
-                                                                "example": 1,
-                                                                "description": "1=ACTIVE, 2=DISABLED, 3=UNSETTLED"
-                                                            },
-                                                            "currency": {
-                                                                "type": "string",
-                                                                "example": "USD"
-                                                            },
-                                                            "timezone_name": {
-                                                                "type": "string",
-                                                                "example": "America/New_York"
-                                                            },
-                                                            "business_id": {
-                                                                "type": "string",
-                                                                "example": "123456789012345"
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
+                            "404": {
+                                "description": "Ad account not found or not accessible"
                             }
                         }
                     }
