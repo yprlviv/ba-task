@@ -358,10 +358,10 @@
                                     }
                                 }
                             },
-                            "advertiser_id": {
+                            "ad_account_id": {
                                 "type": "string",
-                                "description": "Associated advertiser ID",
-                                "example": "adv_987654321"
+                                "description": "Associated Facebook Ad Account ID (since Ad Account = Advertiser)",
+                                "example": "act_123456789"
                             },
                             "facebook_campaign_id": {
                                 "type": "string",
@@ -396,40 +396,51 @@
                     },
                     "Advertiser": {
                         "type": "object",
-                        "required": ["name", "category"],
+                        "description": "Ad Account mapping (since Ad Account = Advertiser in Facebook hierarchy)",
+                        "required": ["name", "facebook_ad_account_id"],
                         "properties": {
                             "id": {
                                 "type": "string",
-                                "description": "Unique advertiser identifier",
-                                "example": "adv_987654321"
+                                "description": "Local mapping ID",
+                                "example": "adaccount_987654321"
                             },
                             "name": {
                                 "type": "string",
-                                "description": "Advertiser name",
-                                "example": "Acme Corporation",
+                                "description": "Ad Account display name",
+                                "example": "Acme Corporation Ad Account",
                                 "maxLength": 255
+                            },
+                            "facebook_ad_account_id": {
+                                "type": "string",
+                                "description": "Facebook Ad Account ID (the actual advertiser in Facebook)",
+                                "example": "act_123456789"
                             },
                             "category": {
                                 "type": "string",
                                 "enum": ["ECOMMERCE", "TECHNOLOGY", "HEALTHCARE", "FINANCE", "EDUCATION", "ENTERTAINMENT", "TRAVEL", "AUTOMOTIVE", "REAL_ESTATE", "OTHER"],
-                                "description": "Advertiser business category",
+                                "description": "Business category for local organization",
                                 "example": "ECOMMERCE"
                             },
                             "status": {
                                 "type": "string",
                                 "enum": ["ACTIVE", "INACTIVE"],
-                                "description": "Advertiser status (always ACTIVE for new advertisers)",
+                                "description": "Local mapping status",
                                 "example": "ACTIVE"
                             },
                             "facebook_business_id": {
                                 "type": "string",
-                                "description": "Facebook Business Manager ID",
+                                "description": "Facebook Business Manager ID (parent of ad account)",
                                 "example": "123456789012345"
                             },
-                            "facebook_ad_account_id": {
+                            "currency": {
                                 "type": "string",
-                                "description": "Facebook Ad Account ID",
-                                "example": "act_123456789"
+                                "description": "Ad Account currency (from Facebook)",
+                                "example": "USD"
+                            },
+                            "timezone_name": {
+                                "type": "string",
+                                "description": "Ad Account timezone (from Facebook, cannot be changed per campaign)",
+                                "example": "America/New_York"
                             },
                             "sync_status": {
                                 "type": "string",
@@ -440,7 +451,7 @@
                             "created_at": {
                                 "type": "string",
                                 "format": "date-time",
-                                "description": "Advertiser creation timestamp",
+                                "description": "Local mapping creation timestamp",
                                 "example": "2024-05-15T10:30:00Z"
                             }
                         }
@@ -729,8 +740,8 @@
                 "/adaccounts": {
                     "get": {
                         "tags": ["2. Ad Accounts"],
-                        "summary": "Discover Facebook ad accounts",
-                        "description": "List existing Facebook ad accounts accessible to your Business Manager. Note: Ad accounts must be manually created through Facebook Business Manager - API cannot create new accounts for most applications. **Facebook API Reference:** [Ad Account](https://developers.facebook.com/docs/marketing-api/reference/ad-account)",
+                        "summary": "List ad accounts (advertisers)",
+                        "description": "List Facebook ad accounts accessible to your Business Manager. In Facebook's hierarchy: Ad Account = Advertiser. Note: Ad accounts must be manually created through Facebook Business Manager - API cannot create new accounts for most applications. **Facebook API Reference:** [Ad Account](https://developers.facebook.com/docs/marketing-api/reference/ad-account)",
                         "parameters": [
                             {
                                 "name": "page",
@@ -793,24 +804,31 @@
                     },
                     "post": {
                         "tags": ["2. Ad Accounts"],
-                        "summary": "Create local advertiser record",
-                        "description": "Create advertiser record in local system only. Note: Facebook Ad Account creation requires manual Business Manager setup - see requirements analysis for limitations. **Facebook API Reference:** [Business Manager Setup](https://developers.facebook.com/docs/marketing-api/businessmanager)",
+                        "summary": "Create local ad account mapping",
+                        "description": "Create local mapping to existing Facebook ad account. This creates a local reference to a Facebook ad account that must already exist in Business Manager. **Facebook API Reference:** [Business Manager Setup](https://developers.facebook.com/docs/marketing-api/businessmanager)",
                         "requestBody": {
                             "required": true,
                             "content": {
                                 "application/json": {
                                     "schema": {
                                         "type": "object",
-                                        "required": ["name", "category"],
+                                        "required": ["facebook_ad_account_id", "name"],
                                         "properties": {
+                                            "facebook_ad_account_id": {
+                                                "type": "string",
+                                                "example": "act_123456789",
+                                                "description": "Existing Facebook Ad Account ID to map to local system"
+                                            },
                                             "name": {
                                                 "type": "string",
-                                                "example": "Acme Corporation"
+                                                "example": "Acme Corporation Ad Account",
+                                                "description": "Local display name for the ad account"
                                             },
                                             "category": {
                                                 "type": "string",
                                                 "enum": ["ECOMMERCE", "TECHNOLOGY", "HEALTHCARE", "FINANCE", "EDUCATION", "ENTERTAINMENT", "TRAVEL", "AUTOMOTIVE", "REAL_ESTATE", "OTHER"],
-                                                "example": "ECOMMERCE"
+                                                "example": "ECOMMERCE",
+                                                "description": "Business category for local organization"
                                             }
                                         }
                                     }
@@ -819,7 +837,7 @@
                         },
                         "responses": {
                             "201": {
-                                "description": "Local advertiser record created (Facebook integration pending manual setup)",
+                                "description": "Local ad account mapping created successfully",
                                 "content": {
                                     "application/json": {
                                         "schema": {
@@ -837,39 +855,6 @@
                                         }
                                     }
                                 }
-                            }
-                        }
-                    }
-                },
-                "/advertisers/{advertiser_id}": {
-                    "get": {
-                        "tags": ["2. Ad Accounts"],
-                        "summary": "Get local advertiser record",
-                        "description": "Get local advertiser record details. For Facebook Ad Account details, use /adaccounts/{account_id}. **Facebook API Reference:** [Ad Account](https://developers.facebook.com/docs/marketing-api/reference/ad-account)",
-                        "parameters": [
-                            {
-                                "name": "advertiser_id",
-                                "in": "path",
-                                "required": true,
-                                "schema": {
-                                    "type": "string"
-                                },
-                                "description": "Advertiser ID"
-                            }
-                        ],
-                        "responses": {
-                            "200": {
-                                "description": "Local advertiser record details",
-                                "content": {
-                                    "application/json": {
-                                        "schema": {
-                                            "$ref": "#/components/schemas/Advertiser"
-                                        }
-                                    }
-                                }
-                            },
-                            "404": {
-                                "description": "Advertiser not found"
                             }
                         }
                     }
@@ -898,12 +883,12 @@
                                 }
                             },
                             {
-                                "name": "advertiser_id",
+                                "name": "ad_account_id",
                                 "in": "query",
                                 "schema": {
                                     "type": "string"
                                 },
-                                "description": "Filter by advertiser"
+                                "description": "Filter by ad account (advertiser)"
                             },
                             {
                                 "name": "status",
@@ -962,7 +947,7 @@
                                 "application/json": {
                                     "schema": {
                                         "type": "object",
-                                        "required": ["name", "buying_type", "start_date", "end_date", "budget", "goal", "advertiser"],
+                                        "required": ["name", "buying_type", "start_date", "end_date", "budget", "goal", "ad_account"],
                                         "properties": {
                                             "name": {
                                                 "type": "string",
@@ -1022,9 +1007,9 @@
                                                     }
                                                 }
                                             },
-                                            "advertiser": {
+                                            "ad_account": {
                                                 "type": "object",
-                                                "description": "Advertiser info (will be created if doesn't exist)",
+                                                "description": "Ad Account info (since Ad Account = Advertiser in Facebook hierarchy)",
                                                 "oneOf": [
                                                     {
                                                         "type": "object",
@@ -1032,18 +1017,23 @@
                                                         "properties": {
                                                             "id": {
                                                                 "type": "string",
-                                                                "description": "Existing advertiser ID",
-                                                                "example": "adv_987654321"
+                                                                "description": "Existing local ad account mapping ID",
+                                                                "example": "adaccount_987654321"
                                                             }
                                                         }
                                                     },
                                                     {
                                                         "type": "object",
-                                                        "required": ["name", "category"],
+                                                        "required": ["name", "facebook_ad_account_id"],
                                                         "properties": {
                                                             "name": {
                                                                 "type": "string",
-                                                                "example": "Acme Corporation"
+                                                                "example": "Acme Corporation Ad Account"
+                                                            },
+                                                            "facebook_ad_account_id": {
+                                                                "type": "string",
+                                                                "example": "act_123456789",
+                                                                "description": "Existing Facebook Ad Account ID to map"
                                                             },
                                                             "category": {
                                                                 "type": "string",
@@ -1328,8 +1318,8 @@
                 "/adaccounts/{account_id}": {
                     "get": {
                         "tags": ["2. Ad Accounts"],
-                        "summary": "Get Facebook ad account details",
-                        "description": "Get specific Facebook ad account information including timezone, currency, and status. **Facebook API Reference:** [Ad Account](https://developers.facebook.com/docs/marketing-api/reference/ad-account)",
+                        "summary": "Get ad account details",
+                        "description": "Get specific Facebook ad account information including timezone, currency, and status. Since Ad Account = Advertiser in Facebook's hierarchy, this returns both local mapping and Facebook account details. **Facebook API Reference:** [Ad Account](https://developers.facebook.com/docs/marketing-api/reference/ad-account)",
                         "parameters": [
                             {
                                 "name": "account_id",
@@ -1338,7 +1328,7 @@
                                 "schema": {
                                     "type": "string"
                                 },
-                                "description": "Facebook Ad Account ID (e.g., act_123456789)"
+                                "description": "Ad Account ID - can be local ID or Facebook Ad Account ID (e.g., act_123456789)"
                             }
                         ],
                         "responses": {
