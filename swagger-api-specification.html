@@ -156,6 +156,99 @@
             margin-top: 0;
             color: #007bff;
         }
+        
+        /* Authentication Flow Diagram Block */
+        .auth-flow-block {
+            background: #f8f9fa;
+            border: 2px solid #e3e8ee;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .auth-flow-block h3 {
+            margin-top: 0;
+            color: #1e3c72;
+            font-size: 1.4em;
+            margin-bottom: 15px;
+        }
+        
+        .auth-diagram-spoiler {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .auth-diagram-spoiler summary {
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #2a5298;
+            padding: 15px 20px;
+            background: white;
+            border: 2px solid #e3e8ee;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .auth-diagram-spoiler summary:hover {
+            background: #e3f2fd;
+            border-color: #2a5298;
+        }
+        
+        .auth-diagram-spoiler[open] summary {
+            background: #2a5298;
+            color: white;
+            border-color: #2a5298;
+            border-radius: 8px 8px 0 0;
+            margin-bottom: 0;
+        }
+        
+        .diagram-content {
+            padding: 25px;
+            background: white;
+            border: 2px solid #e3e8ee;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+        }
+        
+        .diagram-content img {
+            width: 100%;
+            max-width: 900px;
+            height: auto;
+            display: block;
+            margin: 0 auto 20px auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .diagram-explanation {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px 20px;
+            border-radius: 4px;
+            font-size: 0.95em;
+            color: #856404;
+            line-height: 1.6;
+        }
+        
+        .diagram-explanation strong {
+            color: #856404;
+            font-size: 1.05em;
+        }
+        
+        .diagram-explanation ul {
+            margin: 10px 0 0 0;
+            padding-left: 20px;
+        }
+        
+        .diagram-explanation li {
+            margin: 8px 0;
+        }
     </style>
 </head>
 <body>
@@ -180,6 +273,29 @@
             </div>
             
             <div class="content">
+                <!-- Authentication Flow Diagram Block -->
+                <div class="auth-flow-block">
+                    <h3>🔐 Authentication Flow</h3>
+                    <details class="auth-diagram-spoiler">
+                        <summary>📊 Click to view Complete Authentication Flow Diagram</summary>
+                        <div class="diagram-content">
+                            <img src="UML.png" alt="Authentication Flow Diagram - Partner API and Facebook Token Management" />
+                            <div class="diagram-explanation">
+                                <strong>💡 What this diagram shows:</strong>
+                                <ul>
+                                    <li><strong>Step 1-2:</strong> User authenticates with YOUR system (gets Partner JWT token)</li>
+                                    <li><strong>Step 3-4:</strong> User authorizes Facebook access (OAuth flow → receives Facebook token)</li>
+                                    <li><strong>Step 5:</strong> Your system stores the Facebook token securely</li>
+                                    <li><strong>Step 6-9:</strong> User creates campaigns using Partner token, while your server uses stored Facebook token to call Facebook API on their behalf</li>
+                                </ul>
+                                <p style="margin: 10px 0 0 0; font-style: italic;">
+                                    <strong>Key Insight:</strong> The two tokens serve different purposes - Partner token authenticates to YOUR API, Facebook token allows YOUR server to manage Facebook Ads on user's behalf.
+                                </p>
+                            </div>
+                        </div>
+                    </details>
+                </div>
+                
                 <div class="swagger-container">
                     <div id="swagger-ui"></div>
                 </div>
