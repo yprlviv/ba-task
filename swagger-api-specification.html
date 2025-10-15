@@ -280,18 +280,6 @@
                         <summary>📊 Click to view Complete Authentication Flow Diagram</summary>
                         <div class="diagram-content">
                             <img src="UML.png" alt="Authentication Flow Diagram - Partner API and Facebook Token Management" />
-                            <div class="diagram-explanation">
-                                <strong>💡 What this diagram shows:</strong>
-                                <ul>
-                                    <li><strong>Step 1-2:</strong> User authenticates with YOUR system (gets Partner JWT token)</li>
-                                    <li><strong>Step 3-4:</strong> User authorizes Facebook access (OAuth flow → receives Facebook token)</li>
-                                    <li><strong>Step 5:</strong> Your system stores the Facebook token securely</li>
-                                    <li><strong>Step 6-9:</strong> User creates campaigns using Partner token, while your server uses stored Facebook token to call Facebook API on their behalf</li>
-                                </ul>
-                                <p style="margin: 10px 0 0 0; font-style: italic;">
-                                    <strong>Key Insight:</strong> The two tokens serve different purposes - Partner token authenticates to YOUR API, Facebook token allows YOUR server to manage Facebook Ads on user's behalf.
-                                </p>
-                            </div>
                         </div>
                     </details>
                 </div>
